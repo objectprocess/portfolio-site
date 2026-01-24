@@ -155,7 +155,7 @@ const ProjectDetailPage: React.FC = () => {
   }, [isGalleryOpen, imageUrls.length]);
 
   return (
-    <div className="container project-detail">
+    <div className={`container project-detail${hasImages ? '' : ' no-media'}`}>
       <div className="project-detail-top">
         <button className="ui-button" onClick={() => navigate('/')}>Back to Projects</button>
       </div>
@@ -275,7 +275,9 @@ const ProjectDetailPage: React.FC = () => {
               <div
                 dangerouslySetInnerHTML={{
                   __html: renderRichTextHtml(
-                    '<p><em>Project write‑up coming soon.</em></p><p>This area will eventually support full HTML or Markdown content.</p>'
+                    project.body?.trim()
+                      ? project.body
+                      : '<p><em>Project write‑up coming soon.</em></p><p>This area will eventually support full HTML or Markdown content.</p>'
                   ),
                 }}
               />
@@ -303,23 +305,19 @@ const ProjectDetailPage: React.FC = () => {
                 </span>
               </div>
 
-              <div className="project-detail-creditsRow" style={{ marginTop: 10 }}>
-                <span className="project-detail-creditsKey">Credits:</span>
-                <span className="project-detail-creditsValue">
-                  {Array.isArray(project.credits) && project.credits.length ? (
-                    <span>
-                      {project.credits.map((c, i) => (
-                        <span key={`${c.role}-${c.name}-${i}`}>
-                          {c.role}: {c.name}
-                          {i < project.credits!.length - 1 ? ' · ' : ''}
-                        </span>
-                      ))}
-                    </span>
-                  ) : (
-                    '—'
-                  )}
-                </span>
-              </div>
+              {Array.isArray(project.credits) && project.credits.length ? (
+                <>
+                  {project.credits.map((c, i) => (
+                    <div
+                      className="project-detail-creditsRow project-detail-creditsRow--entry"
+                      key={`${c.role}-${c.name}-${i}`}
+                    >
+                      <span className="project-detail-creditsKey">{c.role}:</span>
+                      <span className="project-detail-creditsValue">{c.name}</span>
+                    </div>
+                  ))}
+                </>
+              ) : null}
             </div>
           </div>
         </aside>

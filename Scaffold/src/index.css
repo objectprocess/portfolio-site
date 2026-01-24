@@ -515,9 +515,17 @@ button:focus-visible {
   background: transparent;
   border: var(--border-w) solid var(--color-ink-muted);
 }
+.project-grid .grid-cell.outline.empty-project-slot {
+  /* Lighter outline for empty project slots (filtered-out + future slots) */
+  border-color: rgba(47, 63, 67, 0.28);
+}
 .project-grid .grid-cell.outline:hover {
   background-color: rgba(71, 89, 93, 0.1);
   cursor: pointer;
+}
+.project-grid .grid-cell.outline.empty-project-slot:hover {
+  background-color: transparent;
+  cursor: default;
 }
 .project-grid .grid-cell.solid {
   background-color: var(--color-fill);
@@ -608,7 +616,8 @@ button:focus-visible {
   cursor: pointer;
 }
 .project-grid .grid-cell.project {
-  background-color: var(--color-fill);
+  /* Keep project slots visually “open” (current + future projects) */
+  background-color: transparent;
   background-size: cover;
   background-position: center;
   position: relative;
@@ -823,6 +832,11 @@ button:focus-visible {
   row-gap: 0;
   align-items: baseline;
 }
+.project-detail-creditsRow.project-detail-creditsRow--entry {
+  /* Credits can have long role labels (e.g. "Concept & Design") */
+  grid-template-columns: minmax(10ch, 16ch) 1fr;
+  align-items: start;
+}
 .project-detail-creditsKey {
   font-family: var(--font-ui);
   /* Same size as value text (size inherited from parent) */
@@ -831,7 +845,8 @@ button:focus-visible {
   text-transform: uppercase;
   color: var(--color-paper);
   opacity: 0.8; /* same tone as "CREDITS" label */
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
   line-height: 1.5;
 }
 .project-detail-creditsValue {
@@ -864,10 +879,17 @@ button:focus-visible {
   /* Prevent massive titles from visually “crashing into” prev/next cards */
   font-size: clamp(24px, 3.1vw, 48px);
   line-height: 0.96;
+  text-align: left;
   overflow-wrap: anywhere;
   hyphens: auto;
   text-wrap: balance;
   color: var(--color-ink);
+}
+
+/* If there's no gallery, don't offset the title for nav buttons */
+.project-detail.no-media .project-detail-head {
+  padding-left: 0;
+  padding-right: 0;
 }
 .project-detail-meta {
   color: var(--color-ink-muted);

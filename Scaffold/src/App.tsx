@@ -25,6 +25,7 @@ import present1 from "./assets/BG Images/present1.svg?url";
 import present2 from "./assets/BG Images/present2.svg?url";
 
 type Stamp = { id: string; name: string };
+type StampSlot = Stamp | null;
 
 const App: React.FC = () => {
   const { mode: weatherMode } = useWeather();
@@ -68,15 +69,17 @@ const App: React.FC = () => {
   const availableTags = useMemo(() => [...TAGS], []);
 
   // Apply tag filtering
-  const filteredStamps = useMemo(() => {
+  // Keep stamp positions stable (no re-sorting/compacting) by nulling filtered-out slots.
+  // This way the grid preserves the original layout and leaves "holes" where items were filtered out.
+  const filteredStamps: StampSlot[] = useMemo(() => {
     if (selectedTags.size === 0) return allStamps;
 
-    return allStamps.filter((stamp) => {
+    return allStamps.map((stamp) => {
       const tags = idToTags.get(stamp.id) || [];
       for (const t of selectedTags) {
-        if (!tags.includes(t)) return false;
+        if (!tags.includes(t)) return null;
       }
-      return true;
+      return stamp;
     });
   }, [allStamps, idToTags, selectedTags]);
 

@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "re
 import { useNavigate } from "react-router-dom";
 
 interface ProjectGridProps {
-  stamps: { id: string; name: string }[];
+  stamps: Array<{ id: string; name: string } | null>;
   backgroundTextureUrl?: string | null;
   snowPresentUrls?: [string, string];
   snowSeed?: number;
@@ -21,7 +21,7 @@ const gridMask: ("empty" | "outline" | "solid" | "project")[][] = [
   ["outline", "empty", "empty", "outline", "solid", "project", "solid", "project", "solid", "outline", "empty", "empty"],
   ["empty", "outline", "project", "project", "solid", "solid", "project", "empty", "solid", "project", "outline", "empty"],
   ["empty", "solid", "solid", "project", "project", "solid", "project", "solid", "project", "solid", "project", "solid"],
-  ["empty", "outline", "empty", "project", "solid", "project", "outline", "solid", "project", "solid", "project", "outline"],
+  ["empty", "outline", "project", "project", "solid", "project", "outline", "solid", "project", "solid", "project", "outline"],
 ];
 
 const getThumbUrl = (id: string) => {
@@ -180,6 +180,10 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
 
           const slotIdx = baseType === "project" ? slotIndexByCell.get(`${r}-${c}`) : undefined;
           const cellStamp = slotIdx != null ? stamps[slotIdx] ?? null : null;
+          // Any project slot without a stamp (filtered-out or "future") should render as a light outline,
+          // and still participate in the grid load animation.
+          const isEmptyProjectSlot = baseType === "project" && !cellStamp;
+          const renderType = isEmptyProjectSlot ? "outline" : baseType;
 
           // Texture applies only to SOLID cells
           const isTextureCell = Boolean(backgroundTextureUrl) && baseType === "solid";
@@ -213,8 +217,9 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
           // Important: only mark non-empty cells as "visible"
           const classNames = [
             "grid-cell",
-            baseType,
-            baseType !== "empty" ? "visible" : "",
+            renderType,
+            renderType !== "empty" ? "visible" : "",
+            isEmptyProjectSlot ? "empty-project-slot" : "",
             isTextureCell ? "texture-cell" : "",
             isDecorationCell ? "decor-cell" : "",
           ]
@@ -276,7 +281,6 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
                       if (parent) parent.classList.add("media-error");
                     }}
                   />
-                  <div className="thumb-fallback">{cellStamp.name}</div>
                 </div>
               ) : null}
             </div>
