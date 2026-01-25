@@ -106,6 +106,18 @@ body.weather-snow {
   --color-panel: #ca3333;
 }
 
+/* Snow view: make links more visible on red panels */
+body.weather-snow .project-detail-panelBody a,
+body.weather-snow .project-detail-creditsValue a {
+  color: #ffeb3b; /* bright yellow for visibility on red */
+  text-decoration: underline;
+}
+body.weather-snow .project-detail-panelBody a:hover,
+body.weather-snow .project-detail-creditsValue a:hover {
+  color: #fff176; /* lighter yellow on hover */
+  opacity: 1;
+}
+
 /* Ensure the header rule SVG lines follow theme ink color */
 .header-lines {
   color: var(--color-ink-muted);
@@ -827,14 +839,10 @@ button:focus-visible {
 }
 .project-detail-creditsRow {
   display: grid;
-  grid-template-columns: 8ch 1fr; /* fixed label column (YEAR:, AUTHOR:, etc.) */
-  column-gap: 12px;
+  /* Keep all rows aligned (ID/TYPE/TAGS + custom credits) */
+  grid-template-columns: minmax(8ch, 11ch) 1fr;
+  column-gap: 10px;
   row-gap: 0;
-  align-items: baseline;
-}
-.project-detail-creditsRow.project-detail-creditsRow--entry {
-  /* Credits can have long role labels (e.g. "Concept & Design") */
-  grid-template-columns: minmax(10ch, 16ch) 1fr;
   align-items: start;
 }
 .project-detail-creditsKey {
@@ -856,6 +864,20 @@ button:focus-visible {
   opacity: 0.95;
   min-width: 0;
   overflow-wrap: anywhere;
+}
+.project-detail-creditsValue a {
+  color: var(--color-paper);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.project-detail-creditsValue a:hover {
+  opacity: 0.9;
+}
+.project-detail-creditsValue p {
+  /* `renderRichTextHtml()` wraps markdown in <p>, which adds default margins
+     and can visually misalign the URL row in the credits grid. */
+  margin: 0;
+  display: inline;
 }
 
 .project-detail-center {
@@ -901,6 +923,48 @@ button:focus-visible {
   margin-top: 1rem;
   font-size: clamp(13px, 1.25vw, 15px);
   line-height: 1.7;
+}
+
+/* When body appears after gallery, add more spacing */
+.project-detail-gallery + .project-detail-body {
+  margin-top: 2rem;
+}
+.project-detail-body blockquote {
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  border-left: 4px solid var(--color-border);
+  background: rgba(248, 249, 250, 0.85);
+  border-radius: 8px;
+  color: var(--color-ink);
+}
+.project-detail-body blockquote > p {
+  margin: 0;
+}
+.project-detail-body blockquote > p > strong:first-child {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--color-border);
+  font-weight: 650;
+  font-size: 1.05em;
+}
+.project-detail-body pre {
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  background: rgba(248, 249, 250, 0.85);
+  border: 1px solid var(--color-border-muted);
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.9em;
+  line-height: 1.6;
+}
+.project-detail-body pre code {
+  font-family: 'Courier New', Courier, monospace;
+  color: var(--color-ink);
+  background: transparent;
+  padding: 0;
+  border: none;
+  white-space: pre;
+  display: block;
 }
 
 .project-detail-gallery {
@@ -975,6 +1039,7 @@ button:focus-visible {
 .project-detail-galleryClose:hover {
   background: rgba(0,0,0,0.5);
 }
+
 .project-detail-gallery .nav-button {
   /* Override legacy .nav-button styles from App.css (position: absolute, transforms, etc.) */
   position: static;
@@ -1036,8 +1101,7 @@ button:focus-visible {
   display: block;
   width: 100%;
   height: 100%;
-  max-height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
 }
 

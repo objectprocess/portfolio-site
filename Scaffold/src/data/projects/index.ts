@@ -6,6 +6,21 @@ import dataFlywheels from "./data-flywheels/project";
 import needsEvals from "./needs-evals/project";
 import levisICD from "./levis-icd/project";
 import announcingIndexify from "./announcing-Indexify/project";
+import coldStrangerThings from "./cold-stranger-things/project";
+import coldArchive from "./cold-archive/project";
+import coldPuma from "./cold-puma/project";
+import cpcompany from "./cpcompany-50th/project";
+import wondershareFilmora from "./wondershare-filmora/project";
+import filmoraTrendbook from "./filmora-trendbook/project";
+import myClothingArchive from "./my-clothing-archive/project";
+import visionOTF from "./vision-otf/project";
+import archiveProcess from "./archive-process/project";
+import shenzhen from "./shellzine-shenzhen/project";
+import vooglamRebrand from "./vooglam-Rebrand/project";
+import intelKR from "./intel-from-seoul/project";
+
+
+
 
 export const projects = [
   visionTools,
@@ -16,6 +31,18 @@ export const projects = [
   needsEvals,
   levisICD,
   announcingIndexify,
+  coldStrangerThings,
+  coldArchive,
+  coldPuma,
+  cpcompany,
+  wondershareFilmora,
+  filmoraTrendbook,
+  myClothingArchive,
+  visionOTF,
+  archiveProcess,
+  shenzhen,
+  vooglamRebrand,
+  intelKR,
 ];
 
 export const findProjectById = (id: string) =>

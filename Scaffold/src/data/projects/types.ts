@@ -13,7 +13,7 @@ export type Project = {
   title: string;
   type: ProjectType;
 
-  thumbnail: string;
+  //thumbnail: string;
 
   // controlled buckets for filtering
   tags: Tag[];

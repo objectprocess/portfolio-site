@@ -223,7 +223,7 @@ const ProjectDetailPage: React.FC = () => {
           )}
         </aside>
 
-        {/* Row 2 / Col 2: Gallery OR writing (height matches side panels) */}
+        {/* Row 2 / Col 2: Gallery and/or writing (height matches side panels) */}
         <section className="project-detail-center project-detail-content">
           {hasImages ? (
             <div
@@ -270,15 +270,21 @@ const ProjectDetailPage: React.FC = () => {
                 →
               </button>
             </div>
-          ) : (
+          ) : null}
+          
+          {project.body?.trim() ? (
             <div className="project-detail-body">
               <div
                 dangerouslySetInnerHTML={{
-                  __html: renderRichTextHtml(
-                    project.body?.trim()
-                      ? project.body
-                      : '<p><em>Project write‑up coming soon.</em></p><p>This area will eventually support full HTML or Markdown content.</p>'
-                  ),
+                  __html: renderRichTextHtml(project.body),
+                }}
+              />
+            </div>
+          ) : hasImages ? null : (
+            <div className="project-detail-body">
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: renderRichTextHtml('<p><em>Project write‑up coming soon.</em></p><p>This area will eventually support full HTML or Markdown content.</p>'),
                 }}
               />
             </div>
@@ -313,7 +319,14 @@ const ProjectDetailPage: React.FC = () => {
                       key={`${c.role}-${c.name}-${i}`}
                     >
                       <span className="project-detail-creditsKey">{c.role}:</span>
-                      <span className="project-detail-creditsValue">{c.name}</span>
+                      {String(c.role).trim().toLowerCase() === "url" ? (
+                        <span
+                          className="project-detail-creditsValue"
+                          dangerouslySetInnerHTML={{ __html: renderRichTextHtml(c.name) }}
+                        />
+                      ) : (
+                        <span className="project-detail-creditsValue">{c.name}</span>
+                      )}
                     </div>
                   ))}
                 </>
