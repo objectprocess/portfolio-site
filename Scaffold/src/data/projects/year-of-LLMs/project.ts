@@ -18,10 +18,7 @@ const project: Project = {
   ],
 
   body: `
-
-  ![From the trenches: Rachel Laycock](https://www.oreilly.com/radar/wp-content/uploads/sites/3/2020/02/na-synapse-2a-1400x950-1.jpg)
-  
-  It's an exciting time to build with large language models (LLMs). Over the past year, LLMs have become "good enough" for real-world applications. The pace of improvements in LLMs, coupled with a parade of demos on social media, will fuel an estimated $200B investment in AI by 2025. 
+It's an exciting time to build with large language models (LLMs). Over the past year, LLMs have become "good enough" for real-world applications. The pace of improvements in LLMs, coupled with a parade of demos on social media, will fuel an estimated $200B investment in AI by 2025. 
 
 LLMs are also broadly accessible, allowing everyone, not just ML engineers and scientists, to build intelligence into their products. While the barrier to entry for building AI products has been lowered, creating those effective beyond a demo remains a deceptively difficult endeavor.
 

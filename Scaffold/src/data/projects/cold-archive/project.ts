@@ -13,11 +13,11 @@ I became involved with Cold Archive around 2022 when they reached out due to my 
 
 The work spans cultural documentation of youth subcultures, streetwear history, and music scenes, transforming archival research into engaging narratives that resonate with contemporary audiences.
 
-I have provided a selection of standout social media work in the media gallery. Browse the links below for full text examples and the project gallery for additional collaborative work.
+I have provided a selection of standout social media work in the media gallery. 
+
+Browse the links below for full text examples and the site project gallery for additional collaborative work.
 `,
   credits: [
-    { role: "Author", name: "Joseph Gleasure" },
-    { role: "Client", name: "Cold Archive" },
     { role: "URL", name: "[Cold Archive](https://www.instagram.com/cold_archive/)" }
   ],
   media: [

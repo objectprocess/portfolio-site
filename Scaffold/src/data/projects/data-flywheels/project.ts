@@ -19,9 +19,6 @@ const project: Project = {
   ],
 
   body: `
-
-## Data Flywheel Go Brrr: Using Your Users to Build Better Products
-
 You need to be taking advantage of your users wherever possible. It's become a bit of a cliche that customers are your most important stakeholders. In the past, this meant that customers bought the product that the company sold and thus kept it solvent. However, as AI seemingly conquers everything, businesses must find replicable processes to create products that meet their users' needs and are flexible enough to be continually improved and updated over time. This means your users are your most important asset in improving your product. Take advantage of that and use your users to build a better product!
 
 Prior to the advent of AI, companies would need to build an initial product to bootstrap data before they could do any kind of modeling. Nowadays, companies have gotten the model and must remember that they still need to collect data to improve it, which is how companies have ended up like Blockbuster instead of Netflix. To avoid this, one of the most effective ways to leverage the near-infinite insight your customers can provide you. When considering machine learning, this looks like the concept of a data flywheel. If businesses implement their flywheel correctly, they can build AI products that leverage every user interaction to iterate and improve their products continually, thus gaining a competitive edge.

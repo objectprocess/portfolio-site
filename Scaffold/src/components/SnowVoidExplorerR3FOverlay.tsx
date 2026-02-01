@@ -51,18 +51,33 @@ const SnowVoidExplorerR3FOverlay: React.FC<Props> = ({ open, onClose }) => {
   const crossArm = 2.6; // keep in sync with InfinityCross/CrossParticles.tsx ARM_LENGTH
   const crossCenterY = groundY + crossArm / 2;
 
-  // 2hollis - Flash (official video); autoplay when overlay opens (user already clicked)
+  // 2hollis - Flash; audio autoplays from hidden iframe when overlay opens
   const FLASH_EMBED = 'https://www.youtube.com/embed/CjnFzPhM72I?autoplay=1';
+  const FLASH_LINK = 'https://www.youtube.com/watch?v=CjnFzPhM72I';
 
   return (
     <div ref={overlayRef} className="snow-void-overlay" tabIndex={-1} role="dialog" aria-modal="true">
+      {/* Hidden iframe so audio autoplays without showing video */}
       <iframe
-        className="snow-void-audio"
+        className="snow-void-audio-iframe"
         src={FLASH_EMBED}
         title="2hollis – Flash"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
       />
+      <a
+        href={FLASH_LINK}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="snow-void-audio-icon"
+        aria-label="2hollis – Flash (opens in new tab)"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          <path d="M9 18V5l12-2v13" />
+          <circle cx="6" cy="18" r="3" />
+          <circle cx="18" cy="16" r="3" />
+        </svg>
+      </a>
       <Canvas camera={{ position: [0, crossCenterY + 0.6, 4.2], fov: 92 }}>
         <color attach="background" args={['#0a0a0c']} />
         {/* White snowy fog to create infinite horizon */}

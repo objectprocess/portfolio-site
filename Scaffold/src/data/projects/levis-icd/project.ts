@@ -13,7 +13,7 @@ const project: Project = {
   credits: [
     { role: "Author", name: "Joseph Gleasure" },
     { role: "Client", name: "Shellzine" },
-    { role: "Original URL", name: "[Shellzine.net](https://shellzine.net/levis-icd/)" }
+    { role: "URL", name: "[Shellzine.net](https://shellzine.net/levis-icd/)" }
   ],
 
   body: `

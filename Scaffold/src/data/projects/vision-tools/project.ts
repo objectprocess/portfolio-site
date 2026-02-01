@@ -14,8 +14,8 @@ const project: Project = {
   As Content Direction Lead, I worked with Vooglam's design team to establish content guidelines and asset production standards while providing critical input on final product assortment and campaign direction. I oversaw packaging design, web assets, and landing page development, and coordinated with our partnerships manager and external PR agency [No Such Agency](https://www.nsa-international.com/) to produce media content.
 `,
   credits: [
-    { role: "Content Direction Lead", name: "Joseph Gleasure" },
-    { role: "Client", name: "TOMBOGO & Vooglam" },
+    { role: "Content", name: "Joseph Gleasure" },
+    { role: "Client", name: "TOMBOGO, Vooglam" },
     { role: "PR", name: "No Such Agency" },
     { role: "URL", name: "[Vision Tools](https://www.vooglam.com/vooglam-tombogo-collection)" }
   ],

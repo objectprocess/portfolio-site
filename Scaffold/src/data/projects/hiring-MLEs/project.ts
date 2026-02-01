@@ -11,7 +11,7 @@ const project: Project = {
   credits: [
     { role: "Author", name: "Joseph Gleasure" },
     { role: "Client", name: "Jason Liu" },
-    { role: "Original URL", name: "[JXNL.co](https://jxnl.co/writing/2024/04/08/hiring-mle-at-early-stage-companies/)" }
+    { role: "URL", name: "[JXNL.co](https://jxnl.co/writing/2024/04/08/hiring-mle-at-early-stage-companies/)" }
   ],
 
   body: `
