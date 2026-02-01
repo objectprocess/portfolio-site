@@ -9,7 +9,7 @@ const ProjectDetailPage: React.FC = () => {
   const { id } = useParams();
 
   const fallbackImageUrl = useMemo(
-    () => new URL('../assets/projects/fallback.jpg', import.meta.url).href,
+    () => new URL('../assets/thumbnails/vision-tools.png', import.meta.url).href,
     []
   );
 
