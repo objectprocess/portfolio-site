@@ -507,6 +507,9 @@ body {
   /* Allow the page to shrink on small screens */
   html, body, #root { min-width: 0; width: 100%; overflow-x: hidden !important; }
 
+  /* Align title, filters, and 2-col grid with symmetrical 12px sides */
+  .container { padding: 0 12px; }
+
   /* Sidebar removed; no mobile override needed */
 
   /* Header: stack title and nav so they don't overlap */

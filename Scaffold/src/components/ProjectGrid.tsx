@@ -1,6 +1,8 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const MOBILE_BREAKPOINT = 768;
+
 interface ProjectGridProps {
   stamps: Array<{ id: string; name: string } | null>;
   backgroundTextureUrl?: string | null;
@@ -38,6 +40,16 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
 }) => {
   const navigate = useNavigate();
   const gridRef = useRef<HTMLDivElement | null>(null);
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== "undefined" && window.innerWidth <= MOBILE_BREAKPOINT
+  );
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth <= MOBILE_BREAKPOINT);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
   const fallbackThumbUrl = useMemo(
     () => new URL(`../assets/projects/fallback.jpg`, import.meta.url).href,
     []
@@ -173,6 +185,84 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
     map.set(oneKey, snowPresentUrls[idx]);
     return map;
   }, [snowPresentUrls?.[0], snowPresentUrls?.[1], snowSeed]);
+
+  // Simplified mobile view: 2-column grid of clickable icons under title + filters
+  const mobileStamps = useMemo(
+    () => stamps.filter((s): s is { id: string; name: string } => s != null),
+    [stamps]
+  );
+
+  if (isMobile) {
+    return (
+      <div className="project-grid project-grid-mobile">
+        {mobileStamps.map((stamp) => (
+          <div
+            key={stamp.id}
+            className="project-grid-mobile-cell"
+            role="button"
+            tabIndex={0}
+            onClick={() => navigate(`/projects/${stamp.id}`)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                navigate(`/projects/${stamp.id}`);
+              }
+            }}
+          >
+            <div className="project-tile">
+              <img
+                src={getThumbUrl(stamp.id)}
+                alt={stamp.name}
+                className="thumb"
+                loading="lazy"
+                data-format-tried="jpg"
+                onLoad={(e) => {
+                  e.currentTarget.classList.add("loaded");
+                  const tile = e.currentTarget.parentElement;
+                  const cell = tile?.parentElement;
+                  if (cell) cell.classList.add("media-loaded");
+                }}
+                onError={(e) => {
+                  const img = e.currentTarget;
+                  const formatTried = img.getAttribute("data-format-tried");
+                  const tile = img.parentElement;
+                  const cell = tile?.parentElement;
+                  if (formatTried === "jpg") {
+                    img.onerror = null;
+                    img.setAttribute("data-format-tried", "png");
+                    img.src = getThumbUrl(stamp.id, "png");
+                    img.onerror = () => {
+                      img.onerror = null;
+                      img.src = fallbackThumbUrl;
+                      img.style.display = "";
+                      if (cell) {
+                        cell.classList.add("media-error", "media-loaded");
+                      }
+                      img.onload = () => {
+                        img.classList.add("loaded");
+                        if (cell) cell.classList.add("media-loaded");
+                      };
+                    };
+                  } else {
+                    img.onerror = null;
+                    img.src = fallbackThumbUrl;
+                    img.style.display = "";
+                    if (cell) {
+                      cell.classList.add("media-error", "media-loaded");
+                    }
+                    img.onload = () => {
+                      img.classList.add("loaded");
+                      if (cell) cell.classList.add("media-loaded");
+                    };
+                  }
+                }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="project-grid" ref={gridRef}>

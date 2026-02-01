@@ -500,6 +500,66 @@ button:focus-visible {
      so the grid doesn’t look overly spaced-out when cells get smaller. */
   gap: clamp(10px, 1.25vw, 1.5rem);
 }
+
+/* Simplified mobile view: 2-column grid of icons under title + filters (archiveprocess-style) */
+.project-grid-mobile {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  padding: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.project-grid-mobile .project-grid-mobile-cell {
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius);
+  background: transparent;
+  border: var(--border-w) solid var(--color-ink-muted);
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.project-grid-mobile .project-grid-mobile-cell:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 2;
+}
+.project-grid-mobile .project-grid-mobile-cell .project-tile {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.project-grid-mobile .project-grid-mobile-cell .thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+}
+.project-grid-mobile .project-grid-mobile-cell .thumb.loaded {
+  opacity: 1;
+}
+.project-grid-mobile .project-grid-mobile-cell:not(.media-loaded):not(.media-error)::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  background: linear-gradient(90deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.04) 100%);
+  transform: translateX(-100%);
+  animation: shimmer 1.2s infinite;
+}
+.project-grid-mobile .project-grid-mobile-cell.media-loaded::before,
+.project-grid-mobile .project-grid-mobile-cell.media-error::before {
+  display: none;
+}
+.project-grid-mobile .project-grid-mobile-cell {
+  position: relative;
+}
+
 .project-grid .grid-cell {
   aspect-ratio: 1 / 1;
   border-radius: var(--radius);
@@ -1181,7 +1241,7 @@ button:focus-visible {
 
 @media (max-width: 980px) {
   .project-detail-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
   .project-detail-side {
     justify-content: flex-start;
@@ -1197,20 +1257,25 @@ button:focus-visible {
     padding-inline: 0;
   }
 
-  .project-detail-prev,
-  .project-detail-head,
-  .project-detail-next,
+  /* Prev and Next at top, side by side */
+  .project-detail-prev { grid-column: 1; grid-row: 1; }
+  .project-detail-next { grid-column: 2; grid-row: 1; }
+
+  /* Mobile: single-line "Previous project" / "Next project" – hide empty label */
+  .project-detail-nav .project-detail-navLabel:empty {
+    display: none;
+  }
+
   .project-detail-description,
+  .project-detail-head,
   .project-detail-content,
   .project-detail-credits {
-    grid-column: 1;
+    grid-column: 1 / -1;
   }
-  .project-detail-prev { grid-row: 1; }
   .project-detail-description { grid-row: 2; }
   .project-detail-head { grid-row: 3; }
   .project-detail-content { grid-row: 4; }
-  .project-detail-next { grid-row: 5; }
-  .project-detail-credits { grid-row: 6; }
+  .project-detail-credits { grid-row: 5; }
 
   /* On small screens, don't force a huge fixed-height panel; let it grow naturally */
   .project-detail-description .project-detail-panel,

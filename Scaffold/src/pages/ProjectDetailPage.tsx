@@ -30,6 +30,8 @@ const ProjectDetailPage: React.FC = () => {
   const prev = index > 0 ? ordered[index - 1] : undefined;
   const next = index >= 0 && index < ordered.length - 1 ? ordered[index + 1] : undefined;
 
+  const isMobileLayout = viewportSize.width > 0 && viewportSize.width <= 980;
+
   const imageUrls = useMemo(() => {
     if (!project) return [];
 
@@ -218,13 +220,13 @@ const ProjectDetailPage: React.FC = () => {
         <aside className="project-detail-side left project-detail-prev">
           {prev ? (
             <Link className="project-detail-nav" to={`/projects/${prev.id}`}>
-              <div className="project-detail-navLabel">Previous</div>
-              <div className="project-detail-navTitle">{prev.title}</div>
+              <div className="project-detail-navLabel">{isMobileLayout ? '' : 'Previous'}</div>
+              <div className="project-detail-navTitle">{isMobileLayout ? 'Previous project' : prev.title}</div>
             </Link>
           ) : (
             <div className="project-detail-nav disabled">
-              <div className="project-detail-navLabel">Previous</div>
-              <div className="project-detail-navTitle">—</div>
+              <div className="project-detail-navLabel">{isMobileLayout ? '' : 'Previous'}</div>
+              <div className="project-detail-navTitle">{isMobileLayout ? 'Previous project' : '—'}</div>
             </div>
           )}
         </aside>
@@ -265,13 +267,13 @@ const ProjectDetailPage: React.FC = () => {
         <aside className="project-detail-side right project-detail-next">
           {next ? (
             <Link className="project-detail-nav" to={`/projects/${next.id}`}>
-              <div className="project-detail-navLabel">Next</div>
-              <div className="project-detail-navTitle">{next.title}</div>
+              <div className="project-detail-navLabel">{isMobileLayout ? '' : 'Next'}</div>
+              <div className="project-detail-navTitle">{isMobileLayout ? 'Next project' : next.title}</div>
             </Link>
           ) : (
             <div className="project-detail-nav disabled">
-              <div className="project-detail-navLabel">Next</div>
-              <div className="project-detail-navTitle">—</div>
+              <div className="project-detail-navLabel">{isMobileLayout ? '' : 'Next'}</div>
+              <div className="project-detail-navTitle">{isMobileLayout ? 'Next project' : '—'}</div>
             </div>
           )}
         </aside>
