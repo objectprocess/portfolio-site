@@ -5,7 +5,7 @@ const project: Project = {
   title: "Losing My Hands",
   type: "text",
 
-  tags: ["AI", "Personal"],
+  tags: ["AI"],
   description: `The first collaborative piece Jason Liu and I created together. Through in-depth conversations, we explored the psychological and physical toll of his debilitating hand injury sustained during pandemic-era overwork. 
   
   The article examines how physical trauma forced a reevaluation of self-worth, productivity culture, and work-life balance in the tech industry. The piece resonated deeply with readers, reaching over 90,000 views and landing on the front page of Hacker News during its launch week. 

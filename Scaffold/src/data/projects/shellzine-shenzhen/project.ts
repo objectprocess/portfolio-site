@@ -1,125 +1,101 @@
 import type { Project } from "../types";
 //THIS IS AN EXAMPLE OF A TEXT PROJECT,CLONE THIS FILE AND MODIFY THE CONTENT TO CREATE A NEW TEXT PROJECT
 const project: Project = {
-  id: "announcing-Indexify",
-  title: "Announcing Indexify",
-  type: "text",
+  id: "shellzine-shenzhen",
+  title: "The Crowded Desert: Architecture and Urbanism in Shenzhen",
+  type: "media",
 
-  //thumbnail: "/media/projects/losing-my-hands/thumb.jpg",
-  tags: ["AI", "Personal"],
-  description: ` Pre-launch content marketing and ghostwriting for Tensorlake's flagship product, Indexify—a data infrastructure platform that ingests unstructured data (videos, podcasts, PDFs) and enables semantic search at scale. 
+  tags: ["Personal"],
+  description: ` This project is a photo essay produced alongside my first trip to China in Winter 2023. While traveling, I was reading Jean Baudrillard’s America and was shocked by the similarities between his description of the American desert and the “cultural desert” of Shenzhen and the Pearl River Delta, as theorized by Rem Koolhaas and his students in Great Leap Forward.
   
-  Founded by former FAANG engineers, Indexify bridges the gap between LLM prototypes and production-ready applications through real-time extraction pipelines and multi-modal data processing. 
-  
-  I developed the launch content strategy, ghostwrote technical announcement posts, and coordinated KOL marketing placements with leading AI developers. The campaign drove product adoption through strategic blog content distributed across Medium, Substack, and developer communities.
-`,
+  The essay attempts to reconcile the two deserts through their diametrically opposed approaches to urbanism.`,
   credits: [
     { role: "Author", name: "Joseph Gleasure" },
-    { role: "Client", name: "Tensorlake, Diptanu Choudhury" },
-    { role: "URL", name: "[Announcing Indexify](https://medium.com/tensorlake-ai/announcing-indexify-a36f69967884)" }
+    { role: "Client", name: "Shellzine" },
+    { role: "URL", name: "[The Crowded Desert](https://shellzine.net/shenzhen-architecture/)" }
   ],
+
+  media: [
+    new URL("./1 (1).jpg", import.meta.url).href,
+    new URL("./1 (2).jpg", import.meta.url).href,
+    new URL("./1 (3).jpg", import.meta.url).href,
+    new URL("./1 (4).jpg", import.meta.url).href,
+    new URL("./1 (5).jpg", import.meta.url).href,
+    new URL("./1 (6).jpg", import.meta.url).href, 
+    new URL("./1 (7).jpg", import.meta.url).href,
+    new URL("./1 (8).jpg", import.meta.url).href,
+    new URL("./1 (9).jpg", import.meta.url).href,
+    new URL("./1 (10).jpg", import.meta.url).href,
+    new URL("./1 (11).jpg", import.meta.url).href,
+    new URL("./1 (12).jpg", import.meta.url).href,
+    new URL("./1 (13).jpg", import.meta.url).href,
+    new URL("./1 (14).jpg", import.meta.url).href,
+  ],
+
   body: `
+Thirty years ago, this place was a swamp. A fishing village of barely ten thousand in a country of over a billion, or at least that’s what locals will tell you. At the time neglected, the Pearl River Delta and especially Shenzhen, was the perfect testing ground for the liberalized PRC of the 1970s’ new economic policies. Subsequently, it became the world’s densest urban center, with nearly one hundred million people living in eleven cities, making up roughly 13% of the country’s economic activity. Known as China’s Silicon Valley, the level of urbanization is staggering, and in the wake of unprecedented housing crises across the Western world, it might be able to serve as a starting point for a new model of urban growth.
 
-## Build Production-Grade LLM Applications that React to Your Data
+## 1. The mountains are high, and the emperor is far away.
 
-Have you built a prototype with LLMs lately? Chances are you spent most of your time tuning the accuracy of your application. But do you trust its reliability? Will it be snappy enough to keep your users engaged? Will it be adaptive to new models or new modalities of data?
+It is impossible to understand China today without understanding the 200 years or so that preceded it. The slow historical process of the past two centuries boiled over in the form of three significant events that shaped contemporary Chinese society. Firstly, the century of humiliation resulted in China being looted and decimated by foreign imperial powers. This led to Mao Zedong ridding the country of all Western, and later Soviet, influence through one of the most thorough and effective decolonization campaigns in world history. Rising like a phoenix from its ashes, China then liberalized with economic reforms in the 1970s and early 1980s. The establishment of Shenzhen as a Special Economic Zone (SEZ) was a pivotal move in China’s economic reforms, significantly contributing to its evolution into the world’s second-largest economy after the United States and establishing itself as the [capitalist-communist](https://electronicbookreview.com/essay/liberation-hurts-an-interview-with-slavoj-zizek/) nation par excellence.
 
-Even if you've built a great demo, scaling it to production is the real challenge. The transition from prototype to live environment of data processing infrastructure is fraught with systems engineering challenges and performance issues. [Enter **Indexify**](https://getindexify.ai/): the tool that changes the game by simplifying the transition from prototype to production for data-intensive LLM applications at any scale.
+The PRC’s economic ascendancy post-Cultural Revolution and the Sino-Soviet split profoundly affected available funding for architecture, as part of the country’s overall aspirations to create a uniquely Chinese aesthetic for art and design. Today, alongside the Gulf states, China is now one of the only places on earth [where large-scale](https://www.dezeen.com/2018/04/12/nbbj-architecture-skyscrapers-tencent-offices-headquarters-shenzhen-china/)[, ambitious](https://www.dezeen.com/2022/05/12/cctv-headquarters-oma-deconstructivism/) architectural projects are possible.
 
-If you want to dive straight into code, here is our GitHub repository! [https://github.com/tensorlakeai/indexify](https://github.com/tensorlakeai/indexify)
+As mentioned earlier, Shenzhen and the Pearl River Delta were an economically neglected region as cities such as Beijing and Shanghai took precedence in the nation’s re-building after World War II. The years of underfunding relative to prominent regions had led to the region being euphemistically called a ‘Cultural Desert’ by Rem Koolhaas, renowned Dutch architect and urban theorist, prior to its SEZ designation and meteoric economic growth.
 
-## The Missing Piece of LLM Infrastructure Stack
+When considering the use of the phrase ‘Cultural Desert’ in reference to Shenzhen, Jean Baudrillard’s stunning survey of The United States ‘America’ comes to mind: “ [The United States of America is a ‘Cultural Desert’ because it is a post-historical nation. It exists without reference points in a perpetual present. It has no need for a culture, a genealogy to the past or its history](https://monoskop.org/images/a/ac/Baudrillard_Jean_America_1989.pdf). The Pearl River Delta, like the USA, lacked historical centrality as an economically under-developed region, which relatively left a cultural vacuum. In a geo-physical sense, deserts create a need for mobility as they are bereft of vitality, and, thus in a “cultural desert”, there also exists a desperate need to escape from an intangible, but very real, cultural vacuum. In both cases, a wealth of economic development has afforded significant and rapid enrichment in the arts and design to fill that void.
 
-Traditionally, applications have used structured data stores like Postgres and APIs. With the rise of LLMs, there's a need for decision-making software and personalized assistants that derive knowledge from real-world data such as videos, PDFs, images, and emails. Among all currently available tools, batch processing systems like Spark and Hadoop best process unstructured data. However, they aren't designed for low-latency, privacy-aware online systems. Recent LLM frameworks make prototyping LLM applications easier, but they don't provide a robust, reliable, and scalable data infrastructure needed to process unstructured data at scale or handle all types of unstructured data.
+From an architectural perspective, Shenzhen’s ‘Cultural Desert’ was attended to via the creation of the megalopolis: modernization of uniquely Chinese forms, new personal freedoms afforded both by increased incomes and relaxing political controls, an evolving social mobility, and shifting hierarchies. “The mountains are high, and the emperor is far away,” refers to the tendency of leadership in each province in China to ignore the wishes of Beijing, perhaps not so dissimilar to the relationship between the federal and states in the USA. The SEZ allowed rapid industrialization via foreign direct investment, transforming the region into a modern market economy, while still allowing for central control from Beijing as needed to keep those foreign interests in check.
 
-### What are we trying to solve?
+The glut of new development money and the vacuum of the cultural desert culminated in a urge to create a megalopolis that was both distinct to Shenzhen and uniquely Chinese as distinct from the West. An ideologically-centralized and powerful government with the geographic landmass and budding flow of foreign income has given rise to a shining beacon of urbanism the likes of which the world has never seen before.
 
-We hope to address many of the issues developers face when they transition from prototype to production of a data-intensive LLM application. In our experience, this starts with four key challenges:
+## 2. To get rich is glorious
 
-- Seamlessly integrate embedding and structured data extraction pipelines.
-- Maintain updated indexes for dynamic data changes.
-- Ensuring fault tolerance throughout the ingest-extract-retrieve process as data volume grows.
-- Data Infrastructure that spans across GPUs and CPUs and scaling with data.
+The era of Mao was distinguished through factories, large-scale industrial development, steel production, morose grey suits and the shift from Soviet to Sino Realism as the national style. Deng Xiaopeng’s reforms through the late 1970’s to early 90’s were characterized by unlimited growth. Vertigo-inducing high rises, dense post-modern and deconstructivist condo designs, and enhanced collaboration and investment from the West, leading to the spread of conceptual and contemporary art styles in China, advanced technological developments and a geopolitical ascendancy to the world’s second-largest economy.
 
-**We built Indexify to enable LLM applications to adapt to their evolving environments through real-time pipelines that process real-world data.** Indexify excels in real-time data extraction, multi-modality, retrieval, and scales with data. It supports the ingestion of various data types and the construction of pipelines for vector and structured databases, streamlining both structured data retrieval and semantic search under a single API.
+Regarding the Pearl River Delta, the slick designs for national broadcasters, banks, and telecom companies were not ordained for the South despite its designation as a SEZ. Aesthetic cultural development was to occur in the ancient cities. After all, it was Beijing, Shanghai, and Chongqing being discussed when Xi Jinping promised the Chinese people ‘no more weird buildings.’
 
-## Unparalleled flexibility between Vector and Structured Data
+Shenzhen’s less supported transition out of its cultural desert has resulted in an utterly unique architectural vernacular with regard to its local buildings. To accommodate for the continual setting and breaking of engineering records for high-rise buildings – [records that are now only being broken by the PRC’s development policy in Changsha, Hunan](https://www.youtube.com/watch?v=AhLk7L1B_fE) – Shenzhen instead focused on movement. Where Shanghai and Beijing have impressed upon visitors a monumental sense of scale and tradition, of unending history and a continuity to the past, the impressive part of Shenzhen’s development is its speed. Baudrillard wrote in reference to the American Southwest, “Speed is simply the rite that initiates us into emptiness: a nostalgic desire for forms to revert to immobility, concealed beneath the very intensification of their mobility. Akin to the nostalgia for living forms that haunts geometry.” Indeed, speed has long been a fascination of the Europeans, from the futurists like Marinetti to more recent continentals like Virilio. The obsession with progression, point A to B, forward movement and the advance guard has seemingly also gripped the PRC. Speed can be observed everywhere in Shenzhen; from the buildings to the local infrastructure and in the construction rate at which it occurs.
 
-Today's RAG applications mainly use flexible but less accurate semantic search on embedding for retrieval. Retrieving accurate context for LLMs from a large corpus of documents, videos, or images using semantic search involves re-ranking, clustering, re-writing queries, and fine-tuning embedding models. Tuning such an end-to-end system takes a lot of time and work.
+The shocking reality of the remnants of pre-2000’s Southern Chinese architecture lies in their hastily pasted-over cracks – as if the buildings know they are not long for the world. They will be, and have been as, quickly replaced as first constructed. Initially, much fewer people were anticipated to live in Shenzhen, and buildings were erected cheaply and quickly in a kind of forced obsolesce that planners would adjust as necessary. These earlier buildings are now forgotten as anonymous paper house structures, placating the temporary contexts and needs of the city. The local currency may be results – proxies for money and success- but speed is the city’s virtue above all else.
 
-Structured data extracted from the same sources makes it easy to retrieve accurate context by transforming queries to SQL queries. Associating structured data with embedding also [improves semantic search](https://www.pinecone.io/learn/vector-search-filtering/). You can narrow down the search space by applying predicates on the structured data associated with the embeddings before performing the semantic search.
+Already 25 years into establishing itself as Mainland China’s rebuttal to the West, Shenzhen circa 1995 – the city so meticulously explored in Koolhaas’s study on the Pearl River Delta in the 1990s- is now unrecognizable. Entire neighbourhoods have now been paved over and rebuilt. What landmarks remain are tourist destinations or crumbling ruins. The Window of the World is China’s own simulated Disney World, the same proliferation of kitsch, the same flat monolith rising out of the unending plane of horizontal space. Where Aldo Rossi & Michael Graves produced laconic and neoclassical monstrosities, today’s architects produce glass facades in the Chinese desert.
 
-Imagine building a [financial research assistant](https://github.com/tensorlakeai/indexify/blob/main/docs/docs/examples/SEC_10_K_docs.ipynb) — you could create an extraction pipeline that extracts metadata such as ticker names, dates of reports, and other key information. Retrieving context targeting specific dates or company names becomes easier by writing the query as an SQL statement that filters the report's criteria. Using only semantic search would require getting the top 50 document fragments, re-ranking them, and praying that the LLM does not use the data from the irrelevant fragments.
+The breakneck speed and constant churning has resulted in less iconic architecture for Shenzhen than other Tier One cities. However, this is a matter of relativity as the city is not lacking in contemporary landmarks. Koolhaas’s OMA was responsible for buildings both in the foreigner-friendly Shekou Sea World District, completing Prince Plaza – a mixed-used residential tower and mall – in 2020, and in the heart of Shenzhen’s Futian financial district, completing the mecca to capital, the Shenzhen Stock Exchange in 2013.
 
-Indexify makes the interplay [between vector and structured data easy](https://github.com/tensorlakeai/indexify/blob/main/docs/docs/examples/Visual_Understanding_Clip_Yolo.ipynb) by syncing vector stores with structured data automatically when it detects presence of both in a single pipeline.
+Located a short drive from the palatial tech headquarters of the Nanshan Software Base, Prince Plaza finds itself tucked in between the Nanshan mountains and a tourist center overlooking the desolate western pole of Hong Kong. Its seemingly anonymous structure only reveals itself upon closer inspection. Shifting prisms underlaid by gilded geometric facades offer panoramic views of the unique geographic qualities of Shekou. Meanwhile, pressed against the Hong Kong border, the Futian District is a sprawling masterpiece of urbanism, malls stretching for eight blocks, while fifty story residential buildings shade both sides of Shennan Road that slice the city into two.
 
-## Data is constantly changing.
+Overlooking the motorway cum parade route for Shenzhen’s development is a 46-story dark grey tower and elevated podium. Clearest seen from the roadway, the stock exchange is guilty of Hans Ibeling’s criticism of deconstructivist architecture in that it takes a conceptual idea and uses it as a superficial basis for the structure. The base, as if lifted by the same speculative euphoria that drives the market, has crept up the tower to become a raised podium.” Beyond this comedic interpretation of markets and commodities as a building the Shenzhen Stock Exchange is remarkable in its engineering and basic form despite the specious reasoning behind it. It takes a typical point tower design replete with a complementary ‘deep’ façade and reverses it. It elevates the façade to the uppermost portion of the first third of the structure rather than establishing it as a base for the tower. The tower itself is a hulking black monolith not dissimilar to [Rossian buildings](https://www.dezeen.com/2015/07/30/san-cataldo-cemetery-modena-italy-aldo-rossi-postmodernism/) drawing on the [eerie stillness of Giorgio de Chirico’s early 20 th century paintings](https://www.cca.qc.ca/en/search/details/collection/object/414481). From the immediacy of its height to intimate corridors, offices, and gardens, the result of the stock exchange is a distinctive structure that accommodates a variety of scales and uses.
 
-> Indexify is the only framework that provides true real-time extraction.
+While not nearly as culturally iconic, Shenzhen is also home to a Software Base in Nanshan, the crown jewel of which is [Tencent’s Global HQ](https://www.nbbj.com/work/tencent-global-headquarters). Designed by NPPJ, the site cleverly addressed the primary concern of contemporary Shenzhen. Unable to build horizontally due to rising land costs, the firm produced a distinctive dual-tower design with contrasting bridge designs to foster intracompany collaboration. In [humorous Goyaesque fashion](https://en.wikipedia.org/wiki/Charles_IV_of_Spain_and_His_Family), NPPJ decided to make the bridges orange and black, which can be interpreted as a nod to competitor and rival company Alibaba. Although lacking in comparison to Shanghai and Beijing, other notable sites in Shenzhen include Lianhuashan Park, OCT, & China Resources Headquarters, with a plethora of name-brand architects planning in the coming decade.
 
-For optimal performance, LLM applications must adapt instantly to dynamic data changes, ensuring real-time responsiveness and accurate answers. Indexify provides accurate answers for frequently updated documents by synchronizing data changes with indexes through real-time extraction pipelines.
+Not to fall prey to the spectacle of [‘event’ based](https://www.google.ca/books/edition/Jean_Baudrillard_The_Disappearance_of_Cu/Pi5WDwAAQBAJ?hl=en&gbpv=1&dq=this+is+the+very+definition+of+an+event:+when+an+illegible+long+running+process+becomes+legible&pg=PA300&printsec=frontcover) architecture (Baudrillard later in life defined an event as “when an illegible, long-running process becomes legible at a given moment by the force of an unprecedented act.”), one of the most extraordinary realizations of being in Shenzhen is noting the sheer force of human capital that is required to maintain it. This is a source of critical praise, and rightfully so, as it’s not the cultural giants that make Shenzhen a tour du force but the everyday and mundane infrastructure like the subway, taxis, transit and freeways that force blood into the city’s arteries. The incomprehensible number of human resources that go into maintaining the flower beds and gardens, cleaning the streets, and keeping them impeccably groomed, all while maintaining record levels of urban growth, can only be believed through seeing the small army of workers attending to the city’s every need at all hours of the day.
 
-Building reporting or decision-making tools on real world events, business transactions, and conversations becomes a breeze.
+## 3. You can make your own paradise
 
-### Deletion and Incremental Indexing
+The material experience of being in Shenzhen is extraordinary. The city is unlike anything in the West. Everything new, or at least in preparation for being replaced, the size larger than anything else; no evidence of urban decay, rot, or filth. There are no homeless, No beggars, No junkies.
 
-Indexify automatically deletes data from various indexes and structured stores when the source is deleted, ensuring compliance with privacy-related regulations. When data sources are partially updated, it only recomputes and syncs the changed parts with storage systems.
 
-### Real-Time Compute Engine
+> A desert is a perpetual present. Without reference point crucially requiring(facilitates) mobility across horizontal space. The megapolis provides mobility across vertical space (social, economic, geographic). “a megalopolis is usually developed along some major…axes. However these axes are not simply..lines. They…are corridors…usually consist[ing] of complex networks”
+>
+> **Jean Baudrillard**
 
-We designed Indexify for real-time performance. The reactive engine starts execution in less than five milliseconds. Near instant execution means your LLM will know about the changes in a document or uptake transcripts from a sales call as they happen. The compute engine is built on top of a replicated state machine, which allowed us to develop a fault-tolerant control plane without the overheads of polling a database like Postgres or Redis to react to new data.
+It speaks to the current alienation, the sharp segregation of the intersectional social hierarchy of countries like Canada and the United States that there is the same sense of experience in Shenzhen. Whereas in a smaller Chinese city like Changsha, you may garner unwanted attention by being a foreigner, the foreigner in Shenzhen is an anonymous part of the city’s makeup. Perhaps it is an affectation brought on by lockdowns and COVID-19, but the social isolation that cities like Vancouver and Toronto are known for is also present in Shenzhen. In many ways, the physical sensation of existing on a city street is the same. No one notices you; no one says hello. And although the pace of life is faster, which means you’re always on your toes, no one will bother you unless you’re in their way. You can engage and disengage with the city as you please and traverse the capillaries as they expand and retract around you. The relentless rhythm of the crowd is punctuated by the listless noise of the city’s myriad streets.
 
-While many developers turn to queues for extraction workloads, they often become impractical, and allocating compute resources becomes challenging when engineers or workloads share clusters. To remedy this, we developed a shared state scheduler in Indexify. With scalability comparable to the largest internet systems, you won't encounter scalability limits anytime soon, making Indexify the ideal long-term solution.
+> “How does anyone date, raise a family?”
+> 
+> “They don’t. You go to Shenzhen to work.”
 
-### Fault Tolerance for Business Critical Applications
+They say Shenzhen is a city full of young people. Presumably this would entail an expansive nightlife, bars, clubs, a cornucopia of hedonism buttressing the engine of China’s tech industry. And there are ample malls, and leisure centers to accommodate the scales of wealth that a Westerner couldn’t possibly comprehend. One such mall reserved for Shenzhen’s wealthiest featured a full wall installation by Taiwanese Canadian artist Dennis Lin. Both utterly decadent and totally banal its mere existence is yet another instantiation of the culture desert underpinning Shenzhen. The installation, while beautiful, is largely ignored as the mall is mostly empty of customers on a Saturday afternoon. There are endless playgrounds and entertainment hubs yet there doesn’t seem to be much opportunity to use them. The piles of exercise equipment and empty gyms found in sports parks all over the city are like beautiful ruins that only come to life during public holidays.
 
-The difference between indexing a document and dropping it on the floor because of a transient error in the system is a happy user versus losing your user's trust. Indexify's state machine for extraction allows computations to be expressed as pipelines, where each step is durable, and failures are automatically retried. The control plane itself can be replicated within a geographical region, thus making it resilient to failures of compute nodes or whole data center failures.
+The relative prosperity of Shenzhen has led to it becoming one of the country’s most expensive cities. The strong earning potential available to labourers in the city compared to the national average has resulted in an utterly bizarre phenomenon. Locals told me that despite being a city of young people, because people are so busy with work they cannot start families until after they leave the city. Apparently, it’s not uncommon for workers to come to Shenzhen immediately after university, work for a company for around 10 years and then move back to their hometown. This is exacerbated by the extremely high cost of owning real estate in the city compared to median wages and [Chinese companies’ tendency to lay off or refuse to hire workers over the age of 35.](https://www.cnn.com/2023/08/26/china/35-curse-unemployment-discrimination-intl-hnk/index.html#:~:text=%E2%80%9CInvisible%20age%20discrimination%20for%2035,officials%20have%20acknowledged%20the%20issue.) Which in turn has produced a supermodern albeit transient megalopolis.
 
-## Multi-Modality to Future Proof Your Applications
+Yet there is no obvious ‘play hard’ answer to Shenzhen’s work hard mentality. Supposedly banished by the country’s labour laws, the legacy and spectre of ’996’- that is, the work culture of 12-hour days, 6 days a week- lurks around the corner of every corporation. Typical of East Asian work culture – such as Korea’s and Japan’s – 996 culture is rampant in Chinese technology companies and thus everywhere in Shenzhen. However, this appears to be the only outward drawback to this city. The infrastructure is beyond the most radical YIMBY’s pipedreams. The sheer density and, although much criticized ‘copy and paste’ architecture typical of many Chinese cities is disorienting, impressive, and infuriating as a foreigner. They do not disorient for any aesthetic reasons – many of the gated communities and branches of apartments have an otherworldly charm – but for the effect of their otherworldliness upon space. They share the same quality that was identified in Umberto Eco’s infamous observation of Disneyland: [“Disneyland tells us that faked nature corresponds much more to our daydream demands… Disneyland tells us that technology can give us more reality than nature can”](https://www.amazon.ca/Travels-Hyperreality-Umberto-Eco/dp/0156913216). Each of these micro developments sprouting up through the mix of tropical jungle mountain and seaside posits themselves as ‘irreal’. Each condo is a fully functional enclosed ecosystem of the world’s most convenient rapid delivery of all the cloned consumer goods one could ever want. These enclosed hubs are everywhere in the city, like biomes mimicking the ’village-ization’ of the corporate structures of the companies that lease them out.
 
-In a business, there are more than just PDFs. Soon, you will need to draw information from emails, videos, and images for your LLM applications. Indexify provides a unified interface for extracting information from all forms of unstructured data so that you don't have to change tools and frameworks when the time comes. We have included a variety of pre-built and optimized extractors for the most common forms of data. You can also build and share your own custom extractors for use cases that are unique to your application.
+Could it be that the West is now in a place to take much-needed lessons from the East? In an unusual twist, it now appears that it’s the PRC developing the kind of city that most aggressive YIMBY urbanists can only dream about. Walkable, safe, increasingly sustainable, dense mixed-use development and real estate policy supported by a central government which at [least superficially appears to be in the interest of the commons](https://www.cnbc.com/2024/03/11/chinas-housing-minister-property-developers-must-go-bankrupt-if-needed.html#:~:text=BEIJING%20%E2%80%94%20China's%20struggling%20real%20estate,the%20masses%E2%80%9D%20will%20be%20punished.) rather than a handful of institutional investors like the all too familiar Western model of treating single-family homes as [speculation devices for institutional investment funds like Blackrock or Vanguard.](https://www.wsj.com/articles/if-you-sell-a-house-these-days-the-buyer-might-be-a-pension-fund-11617544801) This is to say nothing of the number of Western politicians who are landlords themselves or have conflicts of interest when it comes to increasing housing development. Additionally, China has a homeownership rate of around 90%, which, in the face of unprecedented housing crises across the G7, feels like it’s adding insult to injury. Even for the young workers who have to leave the city before middle age, Shenzhen affords them a pathway to future economic success in other parts of the country, which has taken the city’s development as a model.
 
-[Extracting audio, embedding, or structured data from a 3-hour-long video](https://github.com/tensorlakeai/indexify/blob/main/docs/docs/examples/Video_RAG.ipynb) could yield gigabytes of derived data. Naive ingestion methods over HTTP request/response fails in such cases. We have developed a streaming protocol that allows extracting and ingesting any arbitrary amount of extracted data.
-
-## Fits Seamlessly into the LLM Infrastructure Stack
-
-### It works with popular LLM Frameworks
-
-Indexify won't limit you; it doesn't require applications to be built with a specific LLM framework or programming language. You can use Indexify with HTTP APIs or our [Python and TypeScript libraries](https://docs.getindexify.ai/apis/content_ingestion/). We have built [Langchain](https://docs.getindexify.ai/integrations/langchain/python_langchain/) and [DSPy](https://docs.getindexify.ai/integrations/dspy/python_dspy/) integrations to simplify using Indexify as a retriever within these frameworks, providing seamless connectivity and streamlining the retrieval process.
-
-### Integrates with All Your Favorite Databases
-
-Indexify integrates with [Qdrant, Pinecone, PgVector, and LanceDB](https://docs.getindexify.ai/configuration/#blob-storage-configuration) for vector storage. We use [blob stores to store raw unstructured data](https://docs.getindexify.ai/configuration/#blob-storage-configuration) instead of vector stores to allow for scalable reads and writes of large files. Indexify supports Postgres and SQLite, the most popular structured data storage systems, and additional storage backend support is coming soon.
-
-### Multi Geography Deployments — Extract and Query from Anywhere
-
-It's becoming increasingly common to have distributed infrastructure for AI workloads to get capacity at reasonable prices. Indexify supports geo-distributed deployments, meaning the data plane for extraction can be deployed anywhere on any cloud, and the control plane can be centralized in a specific region. We use mTLS to encrypt all the traffic between control and data planes to secure data movement over the Internet.
-
-## What can You Do with it Today?
-
-You can create pipelines to parse, summarize, embed, classify, and detect entities in videos, images, and documents, ideal for environments where data constantly evolves and LLMs make crucial decisions on the latest information.
-
-If you start using Indexify for these use-cases today, it will scale with growing data volumes, allow you to integrate new models into your pipeline with a few lines of code, and facilitate pipeline deployment wherever you have capacity. Additionally, it provides metrics to troubleshoot performance issues related to retrieval and extraction.
-
-## The Future
-
-In this post, we've explored many of Indexify's features and how they can help users. Stay tuned for future updates, where we will examine Indexify's internals and unveil all the ways you can use them!
-
-We have only just begun our journey and can't wait to share more with you. Keep an eye out for our future improvements that will include:
-
-- Robust security primitives for retrieval enable the easy building of privacy-sensitive applications.
-- Probing hardware for automatic distribution of tasks across many different hardware accelerators to optimize for throughput, latency, and cost.
-- Integration with more AI Native storage systems — Weviate, MongoDB, Cassandra, PineCone, etc.
-- TypeScript SDK for writing extractors.
-
-Do you have any ideas about where we should go or what we should build next?
-
-Join our [Discord to connect with us directly](https://discord.gg/BkpGCCPWWN) and build the future of open-source data processing for Generative AI with us!
-
-Indexify's website — [https://getindexify.ai](https://getindexify.ai/)
-
-Stay in touch with us by following us on [Twitter](https://twitter.com/tensorlake) and [LinkedIn](https://www.linkedin.com/company/tensorlake/)!
-  `
+The infuriating aspect is realized through the frustrating sensation of walking around and realising that this is what the logical conclusion of urbanization *should* be. The question, “Why aren’t we building like this in the West? Why *can’t* we build like this in the West?” is around every corridor of the city. Work-life balance notwithstanding, the idea that this place was erected in four and half decades from an empty plane is maddening. Compared to major Western cities, it feels like the future has arrived in Southern China while the West is in a state of stagnation. Part of this is the result of new development; new buildings are always going to feel more contemporary, up-to-date, and ‘present’ than buildings developed in the 50s, but the other driving force behind this is the PRC’s political will to develop rapidly. Shenzhen may have been one of the first Special Economic Zones, but its success has only been a model for other experiments in free market economic reforms and establishing other development zones.
+`,
 };
 
 export default project;

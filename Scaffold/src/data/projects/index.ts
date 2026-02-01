@@ -16,7 +16,6 @@ import myClothingArchive from "./my-clothing-archive/project";
 import visionOTF from "./vision-otf/project";
 import archiveProcess from "./archive-process/project";
 import shenzhen from "./shellzine-shenzhen/project";
-import vooglamRebrand from "./vooglam-Rebrand/project";
 import intelKR from "./intel-from-seoul/project";
 
 
@@ -41,7 +40,6 @@ export const projects = [
   visionOTF,
   archiveProcess,
   shenzhen,
-  vooglamRebrand,
   intelKR,
 ];
 

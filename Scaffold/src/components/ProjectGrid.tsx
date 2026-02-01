@@ -17,11 +17,11 @@ interface ProjectGridProps {
  * - project: project slot (stamp lives here)
  */
 const gridMask: ("empty" | "outline" | "solid" | "project")[][] = [
-  ["empty", "empty", "outline", "outline", "project", "project", "project", "solid", "outline", "empty", "empty", "project"],
+  ["empty", "empty", "outline", "empty", "project", "project", "project", "solid", "outline", "empty", "empty", "project"],
   ["outline", "empty", "empty", "outline", "solid", "project", "solid", "project", "solid", "outline", "empty", "empty"],
   ["empty", "outline", "project", "project", "solid", "solid", "project", "empty", "solid", "project", "outline", "empty"],
   ["empty", "solid", "solid", "project", "project", "solid", "project", "solid", "project", "solid", "project", "solid"],
-  ["empty", "outline", "project", "project", "solid", "project", "outline", "solid", "project", "solid", "project", "outline"],
+  ["outline", "empty", "project", "project", "solid", "project", "outline", "solid", "outline", "empty", "project", "outline"],
 ];
 
 const getThumbUrl = (id: string, extension: 'jpg' | 'png' = 'jpg') => {

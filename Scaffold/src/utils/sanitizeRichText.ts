@@ -22,10 +22,14 @@ const allowedTags = new Set([
   'PRE',
   'CODE',
   'HR',
+  'FIGURE',
+  'FIGCAPTION',
+  'IMG',
 ]);
 
 const allowedAttrs: Record<string, Set<string>> = {
   A: new Set(['href', 'target', 'rel']),
+  IMG: new Set(['src', 'alt', 'loading', 'class']),
 };
 
 function isSafeHref(href: string): boolean {
@@ -75,6 +79,12 @@ export function sanitizeRichTextHtml(input: string): string {
         el.setAttribute('rel', 'noopener noreferrer');
       }
     }
+    if (el.tagName === 'IMG') {
+      const src = el.getAttribute('src') ?? '';
+      if (!isSafeHref(src)) {
+        el.removeAttribute('src');
+      }
+    }
   }
 
   // Replace disallowed elements with their text content
@@ -114,11 +124,12 @@ function markdownToHtml(md: string): string {
     return `\n\n${placeholder}\n\n`;
   });
 
-  // Extract images (![alt](url)) and replace with placeholder text
+  // Extract images (![alt](url)) and render as <figure><img/><figcaption/></figure>
   const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
   processedSrc = processedSrc.replace(imageRegex, (match, alt, url) => {
-    // Replace images with placeholder text (similar to what we did for needs-evals)
-    return `\n\n> **Images and visualizations are available in the [original article](${url}).**\n\n`;
+    const safeUrl = escapeHtml(String(url).trim());
+    const caption = escapeHtml(String(alt).trim());
+    return `\n\n<figure class="project-body-figure"><img src="${safeUrl}" alt="${caption}" loading="lazy"/><figcaption>${caption}</figcaption></figure>\n\n`;
   });
 
   // Split into blocks by double newlines, but preserve single newlines within blocks
@@ -249,6 +260,12 @@ function markdownToHtml(md: string): string {
         .map(item => `<li>${renderInline(item)}</li>`)
         .join('');
       out.push(`<ol>${items}</ol>`);
+      continue;
+    }
+
+    // Raw HTML figure (from image markdown) – emit as-is
+    if (trimmedBlock.startsWith('<figure') && trimmedBlock.includes('</figure>')) {
+      out.push(trimmedBlock);
       continue;
     }
 
