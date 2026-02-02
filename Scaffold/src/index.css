@@ -683,7 +683,7 @@ button:focus-visible {
   transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 .project-grid .grid-cell.project:hover {
-  transform: translateY(-3px) scale(1.08);
+  transform: translateY(-3px) scale(1.22);
   cursor: pointer;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
   filter: brightness(1.12);
@@ -707,7 +707,7 @@ button:focus-visible {
   transition: transform 0.25s ease, filter 0.25s ease;
 }
 .project-grid .grid-cell.project:hover .thumb {
-  transform: scale(1.05);
+  transform: scale(1.10);
   filter: brightness(1.05);
 }
 
