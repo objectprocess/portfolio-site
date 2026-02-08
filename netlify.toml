@@ -1,0 +1,15 @@
+# Netlify config (for repo-connected deploys)
+[build]
+  base = "Scaffold"
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NETLIFY_SKIP_FRAMEWORK_DETECTION = "true"
+
+# SPA: all routes → index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
