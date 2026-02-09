@@ -51,8 +51,6 @@ credits: [
     new URL("./1 (16).jpg", import.meta.url).href,
     new URL("./1 (17).jpg", import.meta.url).href,
     new URL("./1 (18).jpg", import.meta.url).href,
-    new URL("./1 (19).jpg", import.meta.url).href,
-    new URL("./1 (20).jpg", import.meta.url).href,
   ],
 };
 
