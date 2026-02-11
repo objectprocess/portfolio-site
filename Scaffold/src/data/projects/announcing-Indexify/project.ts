@@ -6,7 +6,7 @@ const project: Project = {
   type: "text",
 
   //thumbnail: "/media/projects/losing-my-hands/thumb.jpg",
-  tags: ["AI", "Personal"],
+  tags: ["AI",],
   description: ` Pre-launch content marketing and ghostwriting for Tensorlake's flagship product, Indexify—a data infrastructure platform that ingests unstructured data (videos, podcasts, PDFs) and enables semantic search at scale. 
   
   Founded by former FAANG engineers, Indexify bridges the gap between LLM prototypes and production-ready applications through real-time extraction pipelines and multi-modal data processing. 
