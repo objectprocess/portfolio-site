@@ -8,6 +8,8 @@ interface WeatherContextValue {
   mode: WeatherMode;
   /** Same as mode on desktop; 'none' on mobile so weather is disabled. */
   effectiveMode: WeatherMode;
+  /** True when viewport <= MOBILE_MAX_WIDTH; weather and toggles are disabled. */
+  isMobile: boolean;
   setMode: (next: WeatherMode) => void;
   toggle: (next: Exclude<WeatherMode, 'none'>) => void;
 }
@@ -59,10 +61,11 @@ export const WeatherProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return {
       mode,
       effectiveMode,
+      isMobile,
       setMode,
       toggle: (next) => setMode(prev => (prev === next ? 'none' : next)),
     };
-  }, [mode, effectiveMode]);
+  }, [mode, effectiveMode, isMobile]);
 
   return <WeatherContext.Provider value={value}>{children}</WeatherContext.Provider>;
 };

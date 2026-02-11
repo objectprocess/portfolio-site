@@ -5,7 +5,7 @@ import { useWeather } from '../context/WeatherContext';
 const Header = () => {
   const [brandHovered, setBrandHovered] = useState(false);
   const [overlayKey, setOverlayKey] = useState(0);
-  const { mode, toggle } = useWeather();
+  const { mode, toggle, isMobile } = useWeather();
 
   const nameChars = useMemo(() => 'Joseph Gleasure'.split(''), []);
   const locationChars = useMemo(() => 'Vancouver B.C.'.split(''), []);
@@ -43,43 +43,45 @@ const Header = () => {
             <Link className="proto-nav-button" to="/">Projects</Link>
           </nav>
 
-          <div className="weather-toggles" aria-label="Weather themes">
-            <button
-              type="button"
-              className={`weather-toggle ${mode === 'snow' ? 'active' : ''}`}
-              aria-pressed={mode === 'snow'}
-              onClick={() => toggle('snow')}
-              title="Toggle snow"
-            >
-              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-                <path
-                  d="M12 2v20M4.5 6.5l15 11M19.5 6.5l-15 11M3 12h18"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-            <button
-              type="button"
-              className={`weather-toggle ${mode === 'rain' ? 'active' : ''}`}
-              aria-pressed={mode === 'rain'}
-              onClick={() => toggle('rain')}
-              title="Toggle rain"
-            >
-              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-                <path
-                  d="M12 2c3.2 4.1 6 7.2 6 11a6 6 0 1 1-12 0c0-3.8 2.8-6.9 6-11Z"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-          </div>
+          {!isMobile && (
+            <div className="weather-toggles" aria-label="Weather themes">
+              <button
+                type="button"
+                className={`weather-toggle ${mode === 'snow' ? 'active' : ''}`}
+                aria-pressed={mode === 'snow'}
+                onClick={() => toggle('snow')}
+                title="Toggle snow"
+              >
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                  <path
+                    d="M12 2v20M4.5 6.5l15 11M19.5 6.5l-15 11M3 12h18"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+              <button
+                type="button"
+                className={`weather-toggle ${mode === 'rain' ? 'active' : ''}`}
+                aria-pressed={mode === 'rain'}
+                onClick={() => toggle('rain')}
+                title="Toggle rain"
+              >
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                  <path
+                    d="M12 2c3.2 4.1 6 7.2 6 11a6 6 0 1 1-12 0c0-3.8 2.8-6.9 6-11Z"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
