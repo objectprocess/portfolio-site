@@ -13,7 +13,7 @@ const project: Project = {
   `,
   credits: [
     { role: "Author", name: "Joseph Gleasure" },
-    { role: "Client", name: "Cold Archive, C.P Company" },
+    { role: "Client", name: "Cold Archive, C.P. Company" },
     { role: "URL", name: "[C.P. Company 50th Anniversary](https://archive.cpcompany.com/#U2FsdGVkX19ssn5L82lrJgvh+zruAKv9vHHywK75Se2gbmz4ZDTJDhFACLwiIaM6ge2kmftBpvzQyV9jeTnWPcgCzJI0)" }
   ],
 
