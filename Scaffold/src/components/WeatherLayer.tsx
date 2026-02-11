@@ -7,19 +7,19 @@ const srcByMode: Record<'rain' | 'snow', string> = {
 };
 
 export const WeatherLayer: React.FC = () => {
-  const { mode } = useWeather();
+  const { effectiveMode } = useWeather();
 
-  if (mode === 'none') return null;
+  if (effectiveMode === 'none') return null;
 
-  const src = srcByMode[mode];
+  const src = srcByMode[effectiveMode];
 
   return (
     <div className="weather-layer" aria-hidden="true">
       <iframe
-        key={mode}
+        key={effectiveMode}
         className="weather-iframe"
         src={src}
-        title={mode === 'rain' ? 'Rain background' : 'Snow background'}
+        title={effectiveMode === 'rain' ? 'Rain background' : 'Snow background'}
         tabIndex={-1}
         sandbox="allow-scripts allow-same-origin"
       />

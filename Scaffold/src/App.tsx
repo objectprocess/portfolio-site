@@ -28,7 +28,7 @@ type Stamp = { id: string; name: string };
 type StampSlot = Stamp | null;
 
 const App: React.FC = () => {
-  const { mode: weatherMode } = useWeather();
+  const { effectiveMode: weatherMode } = useWeather();
 
   const [snowSeed, setSnowSeed] = useState<number>(() =>
     Math.floor(Math.random() * 1_000_000_000)
