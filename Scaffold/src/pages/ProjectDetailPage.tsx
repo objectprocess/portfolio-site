@@ -434,15 +434,17 @@ const ProjectDetailPage: React.FC = () => {
         </aside>
       </div>
 
-      <div className="project-detail-back-to-top">
-        <button
-          type="button"
-          className="ui-button"
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        >
-          Back to Top
-        </button>
-      </div>
+      {project.body?.trim() ? (
+        <div className="project-detail-back-to-top">
+          <button
+            type="button"
+            className="ui-button"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          >
+            Back to Top
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 };
