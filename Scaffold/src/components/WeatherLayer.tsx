@@ -16,6 +16,7 @@ export const WeatherLayer: React.FC = () => {
   return (
     <div className="weather-layer" aria-hidden="true">
       <iframe
+        key={mode}
         className="weather-iframe"
         src={src}
         title={mode === 'rain' ? 'Rain background' : 'Snow background'}

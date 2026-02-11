@@ -2,7 +2,7 @@ import type { Project } from "../types";
 //THIS IS AN EXAMPLE OF A TEXT PROJECT,CLONE THIS FILE AND MODIFY THE CONTENT TO CREATE A NEW TEXT PROJECT
 const project: Project = {
   id: "cpcompany-50th",
-  title: "C.P Company 50th Anniversary",
+  title: "C.P. Company 50th Anniversary",
   type: "media",
 
  
@@ -14,7 +14,7 @@ const project: Project = {
   credits: [
     { role: "Author", name: "Joseph Gleasure" },
     { role: "Client", name: "Cold Archive, C.P Company" },
-    { role: "URL", name: "[C.P Company 50th Anniversary](https://medium.com/tensorlake-ai/announcing-indexify-a36f69967884)" }
+    { role: "URL", name: "[C.P. Company 50th Anniversary](https://archive.cpcompany.com/#U2FsdGVkX19ssn5L82lrJgvh+zruAKv9vHHywK75Se2gbmz4ZDTJDhFACLwiIaM6ge2kmftBpvzQyV9jeTnWPcgCzJI0)" }
   ],
 
   media: [

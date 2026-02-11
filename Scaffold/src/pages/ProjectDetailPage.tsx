@@ -18,6 +18,7 @@ const ProjectDetailPage: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const galleryRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const descriptionPanelRef = useRef<HTMLDivElement | null>(null);
   const [isGalleryOverlayOpen, setIsGalleryOverlayOpen] = useState(false);
   const [isGalleryFullscreen, setIsGalleryFullscreen] = useState(false);
   const [imageAspectRatio, setImageAspectRatio] = useState<number | null>(null);
@@ -56,10 +57,12 @@ const ProjectDetailPage: React.FC = () => {
     return /\.(mp4|webm|ogg|mov)(\?|$)/i.test(url);
   };
 
-  // Reset gallery index when changing projects
+  // Reset gallery index and description scroll when changing projects
   useEffect(() => {
     setCurrentImageIndex(0);
     setImageAspectRatio(null); // Reset aspect ratio when changing projects
+    descriptionPanelRef.current?.scrollTo(0, 0);
+    window.scrollTo(0, 0);
   }, [projectId]);
 
   // Reset aspect ratio when image index changes (will be recalculated on image load)
@@ -239,6 +242,7 @@ const ProjectDetailPage: React.FC = () => {
             <div className="project-detail-panel">
               <div className="project-detail-panelLabel">Description</div>
               <div
+                ref={descriptionPanelRef}
                 className="project-detail-panelBody"
                 dangerouslySetInnerHTML={{ __html: renderRichTextHtml(project.description) }}
               />
@@ -246,7 +250,7 @@ const ProjectDetailPage: React.FC = () => {
           ) : (
             <div className="project-detail-panel">
               <div className="project-detail-panelLabel">Description</div>
-              <div className="project-detail-panelBody">—</div>
+              <div ref={descriptionPanelRef} className="project-detail-panelBody">—</div>
             </div>
           )}
         </aside>
@@ -428,6 +432,16 @@ const ProjectDetailPage: React.FC = () => {
             </div>
           </div>
         </aside>
+      </div>
+
+      <div className="project-detail-back-to-top">
+        <button
+          type="button"
+          className="ui-button"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        >
+          Back to Top
+        </button>
       </div>
     </div>
   );

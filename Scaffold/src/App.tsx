@@ -33,7 +33,7 @@ const App: React.FC = () => {
   const [snowSeed, setSnowSeed] = useState<number>(() =>
     Math.floor(Math.random() * 1_000_000_000)
   );
-  const [snowEggOpen, setSnowEggOpen] = useState(weatherMode === "snow");
+  const [snowEggOpen, setSnowEggOpen] = useState(false);
   const [key, setKey] = useState(0);
   const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
 

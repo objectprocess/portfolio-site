@@ -14,7 +14,7 @@ The entire project is available to view in full at the URL on the right.
    `,
    credits: [
     { role: "Author", name: "Joseph Gleasure" },
-    { role: "URL", name: "[Vision of the Future](https://medium.com/tensorlake-ai/announcing-indexify-a36f69967884)" }
+    { role: "URL", name: "[Vision of the Future](https://archive.org/details/SPREADLARGEVOTF/CODEXfinal/)" }
   ],
 
   media: [
