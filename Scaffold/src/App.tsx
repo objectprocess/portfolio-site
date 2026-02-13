@@ -16,6 +16,8 @@ import "./App.css";
 // IMPORTANT: import from the folder index to avoid colliding with src/data/projects.ts
 import { projects } from "./data/projects/index";
 import { TAGS } from "./data/projects/types";
+import { preloadImage, preloadUrls } from "./utils/preloadAssets";
+import { getThumbUrl } from "./utils/thumbnails";
 
 // Grid background textures
 import gridBgDefault from "./assets/BG Images/DSC_0286.JPG?url";
@@ -96,6 +98,15 @@ const App: React.FC = () => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
+
+  // Pre-cache on page load: all grid thumbnails + active background texture
+  useEffect(() => {
+    const thumbUrls = projects.map((p) => getThumbUrl(p.id));
+    preloadUrls(thumbUrls);
+  }, []);
+  useEffect(() => {
+    if (activeBgTextureUrl) preloadImage(activeBgTextureUrl);
+  }, [activeBgTextureUrl]);
 
   const handleToggleTag = (tag: string) => {
     setSelectedTags((prev) => {

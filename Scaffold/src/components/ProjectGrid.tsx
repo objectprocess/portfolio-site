@@ -1,5 +1,6 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getThumbUrl } from "../utils/thumbnails";
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -26,11 +27,6 @@ const gridMask: ("empty" | "outline" | "solid" | "project")[][] = [
   ["outline", "empty", "project", "project", "solid", "project", "outline", "solid", "outline", "empty", "project", "outline"],
 ];
 
-const getThumbUrl = (id: string, extension: 'jpg' | 'png' = 'jpg') => {
-  // This may 404 if the specific thumbnail doesn't exist; we swap to a real fallback in onError.
-  return new URL(`../assets/thumbnails/${id}.${extension}`, import.meta.url).href;
-};
-
 const ProjectGrid: React.FC<ProjectGridProps> = ({
   stamps,
   backgroundTextureUrl,
@@ -56,6 +52,12 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
   );
 
   const [gridSize, setGridSize] = useState<{ w: number; h: number }>({ w: 0, h: 0 });
+  const [gridOrigin, setGridOrigin] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [viewportSize, setViewportSize] = useState<{ w: number; h: number }>(() =>
+    typeof window !== "undefined"
+      ? { w: window.innerWidth, h: window.innerHeight }
+      : { w: 0, h: 0 }
+  );
   const [cellOffsets, setCellOffsets] = useState<Map<string, { x: number; y: number }>>(new Map());
   const [textureNatural, setTextureNatural] = useState<{ w: number; h: number } | null>(null);
 
@@ -85,7 +87,7 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
 
     const gridRect = grid.getBoundingClientRect();
     const nextOffsets = new Map<string, { x: number; y: number }>();
-    const els = grid.querySelectorAll<HTMLDivElement>(".grid-cell.texture-cell");
+    const els = grid.querySelectorAll<HTMLDivElement>(".grid-cell[data-cell-key]");
 
     els.forEach((el) => {
       const key = el.dataset.cellKey;
@@ -95,6 +97,8 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
     });
 
     setGridSize({ w: gridRect.width, h: gridRect.height });
+    setGridOrigin({ x: gridRect.left, y: gridRect.top });
+    setViewportSize({ w: window.innerWidth, h: window.innerHeight });
     setCellOffsets(nextOffsets);
   };
 
@@ -114,18 +118,23 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
 
   useLayoutEffect(() => {
     recomputeTextureLayout();
+    const id = requestAnimationFrame(() => recomputeTextureLayout());
+    return () => cancelAnimationFrame(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [backgroundTextureUrl, stamps]);
 
   useEffect(() => {
     const grid = gridRef.current;
     if (!grid) return;
+    recomputeTextureLayout(); // run once on mount so we have offsets/origin immediately
     const ro = new ResizeObserver(() => recomputeTextureLayout());
     ro.observe(grid);
     window.addEventListener("resize", recomputeTextureLayout);
+    window.addEventListener("scroll", recomputeTextureLayout, { passive: true });
     return () => {
       ro.disconnect();
       window.removeEventListener("resize", recomputeTextureLayout);
+      window.removeEventListener("scroll", recomputeTextureLayout);
     };
   }, []);
 
@@ -288,24 +297,47 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
           const isTextureCell = Boolean(backgroundTextureUrl) && baseType === "solid" && !snowMode;
 
           const key = `cell-${r}-${c}`;
-          const offset = cellOffsets.get(key);
+          const measured = cellOffsets.get(key);
+          const gridW = gridSize.w;
+          const gridH = gridSize.h;
+          const offset = measured != null
+            ? measured
+            : gridW > 0 && gridH > 0
+              ? { x: (c / cols) * gridW, y: (r / rows) * gridH }
+              : null;
 
+          // Texture: one image sized to cover the grid; each cell is a window via negative offset.
           const textureStyle =
-            isTextureCell && backgroundTextureUrl && offset && gridSize.w && gridSize.h
+            isTextureCell && backgroundTextureUrl && offset && gridW > 0 && gridH > 0
               ? (() => {
-                  const gridW = gridSize.w;
-                  const gridH = gridSize.h;
-                  const sizeX = (textureNatural?.w ?? gridW) * 0.5;
-                  const sizeY = (textureNatural?.h ?? gridH) * 0.5;
-                  const shiftX = (gridW - sizeX) / 2;
-                  const shiftY = (gridH - sizeY) / 2;
-
+                  // "cover" sizing: image fills entire grid (may crop)
+                  const imgAspect = textureNatural
+                    ? textureNatural.w / textureNatural.h
+                    : 1920 / 1280;
+                  const gridAspect = gridW / gridH;
+                  let sizeX: number, sizeY: number;
+                  if (imgAspect > gridAspect) {
+                    // image wider than grid → match height, overflow width
+                    sizeY = gridH;
+                    sizeX = gridH * imgAspect;
+                  } else {
+                    // image taller → match width, overflow height
+                    sizeX = gridW;
+                    sizeY = gridW / imgAspect;
+                  }
+                  // Center the image on the grid
+                  const centerX = (gridW - sizeX) / 2;
+                  const centerY = (gridH - sizeY) / 2;
+                  // Each cell shows the slice at its position
+                  const posX = centerX - offset.x;
+                  const posY = centerY - offset.y;
                   return {
                     ["--tex-image" as any]: `url("${backgroundTextureUrl}")`,
                     ["--tex-size-x" as any]: `${sizeX}px`,
                     ["--tex-size-y" as any]: `${sizeY}px`,
-                    ["--tex-pos-x" as any]: `${shiftX - offset.x}px`,
-                    ["--tex-pos-y" as any]: `${shiftY - offset.y}px`,
+                    ["--tex-pos-x" as any]: `${posX}px`,
+                    ["--tex-pos-y" as any]: `${posY}px`,
+                    backgroundColor: "transparent",
                   } as React.CSSProperties;
                 })()
               : undefined;

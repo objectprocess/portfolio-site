@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { findProjectById, projects } from '../data/projects';
+import { preloadUrls } from '../utils/preloadAssets';
 import { getImageUrlsForTitle } from '../utils/projectImages';
 import { renderRichTextHtml } from '../utils/sanitizeRichText';
 
@@ -56,6 +57,36 @@ const ProjectDetailPage: React.FC = () => {
   const isVideo = (url: string): boolean => {
     return /\.(mp4|webm|ogg|mov)(\?|$)/i.test(url);
   };
+
+  // Preload gallery: current + previous + next so next/prev feel instant
+  useEffect(() => {
+    if (!imageUrls.length) return;
+    const indices = [
+      currentImageIndex - 1,
+      currentImageIndex,
+      currentImageIndex + 1,
+    ].filter((i) => i >= 0 && i < imageUrls.length);
+    const urls = [...new Set(indices.map((i) => imageUrls[i]))];
+    preloadUrls(urls);
+  }, [imageUrls, currentImageIndex]);
+
+  // Preload body and description content images after HTML is in the DOM
+  useEffect(() => {
+    if (!project) return;
+    const srcs: string[] = [];
+    const bodyContainer = document.querySelector('.project-detail-body');
+    if (bodyContainer) {
+      bodyContainer.querySelectorAll('figure.project-body-figure img').forEach((img) => {
+        const s = img.getAttribute('src');
+        if (s) srcs.push(s);
+      });
+    }
+    document.querySelectorAll('.project-detail-description figure.project-body-figure img').forEach((img) => {
+      const s = img.getAttribute('src');
+      if (s) srcs.push(s);
+    });
+    if (srcs.length) preloadUrls([...new Set(srcs)]);
+  }, [project?.id, project?.body, project?.description]);
 
   // Reset gallery index and description scroll when changing projects
   useEffect(() => {
@@ -345,7 +376,7 @@ const ProjectDetailPage: React.FC = () => {
                     src={imageUrls[currentImageIndex]}
                     alt={`${project.title} image ${currentImageIndex + 1}`}
                     className="project-detail-galleryImage"
-                    loading="lazy"
+                    loading="eager"
                     onLoad={(e) => {
                       const img = e.currentTarget;
                       const aspectRatio = img.naturalWidth / img.naturalHeight;
