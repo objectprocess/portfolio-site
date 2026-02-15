@@ -7,7 +7,7 @@ const MOBILE_BREAKPOINT = 768;
 interface ProjectGridProps {
   stamps: Array<{ id: string; name: string } | null>;
   backgroundTextureUrl?: string | null;
-  snowPresentUrls?: [string, string];
+  snowPresentUrls?: string[];
   snowSeed?: number;
   onSnowPresentClick?: () => void;
 }
@@ -164,7 +164,8 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
     return delays;
   }, []);
 
-  // Snow view: only one present (random solid/outline cell); rest stay as outlines
+  // Snow view: only one present (random solid/outline cell); rest stay as outlines.
+  // Use separate RNGs for cell position vs artboard index so which image shows is properly randomized per load.
   const presentByCell = useMemo(() => {
     const map = new Map<string, string>();
     if (!snowPresentUrls || snowSeed == null) return map;
@@ -175,7 +176,8 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
       t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
       return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
-    const rand = mulberry32(snowSeed >>> 0);
+    const randCell = mulberry32(snowSeed >>> 0);
+    const randArtboard = mulberry32((snowSeed + 0x9e3779b9) >>> 0);
 
     const candidateKeys: string[] = [];
     for (let rr = 0; rr < rows; rr++) {
@@ -187,13 +189,13 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
         candidateKeys.push(`cell-${rr}-${cc}`);
       }
     }
-    if (candidateKeys.length === 0) return map;
-    const pick = Math.floor(rand() * candidateKeys.length) % candidateKeys.length;
+    if (candidateKeys.length === 0 || snowPresentUrls.length === 0) return map;
+    const pick = Math.floor(randCell() * candidateKeys.length) % candidateKeys.length;
     const oneKey = candidateKeys[pick];
-    const idx = rand() < 0.5 ? 0 : 1;
+    const idx = Math.floor(randArtboard() * snowPresentUrls.length) % snowPresentUrls.length;
     map.set(oneKey, snowPresentUrls[idx]);
     return map;
-  }, [snowPresentUrls?.[0], snowPresentUrls?.[1], snowSeed]);
+  }, [snowPresentUrls, snowSeed]);
 
   // Simplified mobile view: 2-column grid of clickable icons under title + filters
   const mobileStamps = useMemo(

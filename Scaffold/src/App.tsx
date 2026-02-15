@@ -23,8 +23,20 @@ import { getThumbUrl } from "./utils/thumbnails";
 import gridBgDefault from "./assets/BG Images/DSC_0286.JPG?url";
 import gridBgRain from "./assets/BG Images/ayearoftheland-1edit.jpg?url";
 
-import present1 from "./assets/BG Images/present1.svg?url";
-import present2 from "./assets/BG Images/present2.svg?url";
+// Snow present icons (JPGs; one random one per load)
+import present1 from "./assets/BG Images/Artboard 1.jpg";
+import present2 from "./assets/BG Images/Artboard 2.jpg";
+import present3 from "./assets/BG Images/Artboard 3.jpg";
+import present4 from "./assets/BG Images/Artboard 4.jpg";
+import present5 from "./assets/BG Images/Artboard 5.jpg";
+import present6 from "./assets/BG Images/Artboard 6.jpg";
+import present7 from "./assets/BG Images/Artboard 7.jpg";
+import present8 from "./assets/BG Images/Artboard 8.jpg";
+import present9 from "./assets/BG Images/Artboard 9.jpg";
+import present10 from "./assets/BG Images/Artboard 10.jpg";
+import present11 from "./assets/BG Images/Artboard 11.jpg";
+import present12 from "./assets/BG Images/Artboard 12.jpg";
+
 
 type Stamp = { id: string; name: string };
 type StampSlot = Stamp | null;
@@ -144,7 +156,9 @@ const App: React.FC = () => {
                       stamps={filteredStamps}
                       backgroundTextureUrl={activeBgTextureUrl}
                       snowPresentUrls={
-                        weatherMode === "snow" ? [present1, present2] : undefined
+                        weatherMode === "snow"
+                          ? [present1, present2, present3, present4, present5, present6, present7, present8, present9, present10, present11, present12]
+                          : undefined
                       }
                       snowSeed={weatherMode === "snow" ? snowSeed : undefined}
                       onSnowPresentClick={
