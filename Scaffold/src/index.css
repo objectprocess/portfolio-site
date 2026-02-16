@@ -608,7 +608,7 @@ button:focus-visible {
 .snow-void-overlay:active {
   cursor: grabbing;
 }
-/* 2hollis Flash – hidden iframe (audio autoplays), icon only visible */
+/* Sleepwalker – hidden iframe (audio autoplays), icon only visible */
 .snow-void-audio-iframe {
   position: fixed;
   width: 1px;
