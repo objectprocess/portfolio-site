@@ -12,13 +12,13 @@
       background: url('image (10).png') no-repeat center center fixed;
       background-size: cover;
     }
-    /* Three canvases stacked, fill iframe container */
+    /* Three canvases stacked, top half of viewport only */
     canvas.rain {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
-      height: 100%;
+      height: 50vh;
       pointer-events: none;
     }
     #rain-bg { z-index: 0; }
@@ -113,11 +113,11 @@
 
       function resize() {
         const w = Math.floor(window.innerWidth * dpr);
-        const h = Math.floor(window.innerHeight * dpr);
+        const h = Math.floor(window.innerHeight * 0.5 * dpr);
         canvas.width = w;
         canvas.height = h;
         canvas.style.width = window.innerWidth + 'px';
-        canvas.style.height = window.innerHeight + 'px';
+        canvas.style.height = (window.innerHeight * 0.5) + 'px';
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
       window.addEventListener('resize', resize);
