@@ -19,9 +19,8 @@ import { TAGS } from "./data/projects/types";
 import { preloadImage, preloadUrls } from "./utils/preloadAssets";
 import { getThumbUrl } from "./utils/thumbnails";
 
-// Grid background textures
-import gridBgDefault from "./assets/BG Images/DSC_0286.JPG?url";
-import gridBgRain from "./assets/BG Images/ayearoftheland-1edit.jpg?url";
+// Grid background texture (neutral weather only; rain/snow use empty outline cells)
+import gridBgDefault from "./assets/BG Images/leslieyang_fully_defocused_natural_color_field_glowing_yellow_28df0a8d-da9e-4464-86ac-103780be7ae8_0.png?url";
 
 // Snow present icons (JPGs; one random one per load)
 import present1 from "./assets/BG Images/Artboard 1.jpg";
@@ -37,7 +36,6 @@ import present10 from "./assets/BG Images/Artboard 10.jpg";
 import present11 from "./assets/BG Images/Artboard 11.jpg";
 import present12 from "./assets/BG Images/Artboard 12.jpg";
 
-
 type Stamp = { id: string; name: string };
 type StampSlot = Stamp | null;
 
@@ -52,8 +50,8 @@ const App: React.FC = () => {
   const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
 
   const activeBgTextureUrl = useMemo(() => {
-    if (weatherMode === "snow") return null;
-    if (weatherMode === "rain") return gridBgRain;
+    // Rain and snow: no texture — solid cells render as empty outlines
+    if (weatherMode === "snow" || weatherMode === "rain") return null;
     return gridBgDefault;
   }, [weatherMode]);
 

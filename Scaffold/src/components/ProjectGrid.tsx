@@ -286,17 +286,17 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
           // Any project slot without a stamp (filtered-out or "future") should render as a light outline,
           // and still participate in the grid load animation.
           const isEmptyProjectSlot = baseType === "project" && !cellStamp;
-          // In snow mode, grey solid cells render as outlines (only the one present cell shows an image).
-          const snowMode = Boolean(snowPresentUrls);
+          // No BG texture (rain/snow): grey solid cells render as empty outlines
+          const outlineSolids = !backgroundTextureUrl;
           const renderType =
             isEmptyProjectSlot
               ? "outline"
-              : snowMode && baseType === "solid"
+              : outlineSolids && baseType === "solid"
                 ? "outline"
                 : baseType;
 
-          // Texture applies only to SOLID cells, and not in snow mode (snow mode shows outlines only)
-          const isTextureCell = Boolean(backgroundTextureUrl) && baseType === "solid" && !snowMode;
+          // Texture applies only to SOLID cells when a BG URL is set
+          const isTextureCell = Boolean(backgroundTextureUrl) && baseType === "solid";
 
           const key = `cell-${r}-${c}`;
           const measured = cellOffsets.get(key);
