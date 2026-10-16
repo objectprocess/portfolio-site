@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { Suspense, lazy, useEffect, useMemo, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Header from "./components/Header";
@@ -9,18 +9,22 @@ import ProjectDetailPage from "./pages/ProjectDetailPage";
 
 import { WeatherLayer } from "./components/WeatherLayer";
 import { useWeather } from "./context/WeatherContext";
-import SnowVoidExplorerR3FOverlay from "./components/SnowVoidExplorerR3FOverlay";
 
 import "./App.css";
 
 // IMPORTANT: import from the folder index to avoid colliding with src/data/projects.ts
 import { projects } from "./data/projects/index";
 import { TAGS } from "./data/projects/types";
-import { preloadImage, preloadUrls } from "./utils/preloadAssets";
-import { getThumbUrl } from "./utils/thumbnails";
+import { preloadImage } from "./utils/preloadAssets";
+
+const GRID_DESKTOP_MIN = 769;
+
+const SnowVoidExplorerR3FOverlay = lazy(
+  () => import("./components/SnowVoidExplorerR3FOverlay")
+);
 
 // Grid background texture (neutral weather only; rain/snow use empty outline cells)
-import gridBgDefault from "./assets/BG Images/leslieyang_fully_defocused_natural_color_field_glowing_yellow_28df0a8d-da9e-4464-86ac-103780be7ae8_0.png?url";
+import gridBgDefault from "./assets/BG Images/leslieyang_fully_defocused_natural_color_field_glowing_yellow_28df0a8d-da9e-4464-86ac-103780be7ae8_0.webp?url";
 
 // Snow present icons (JPGs; one random one per load)
 import present1 from "./assets/BG Images/Artboard 1.jpg";
@@ -109,14 +113,24 @@ const App: React.FC = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Pre-cache on page load: all grid thumbnails + active background texture
+  // Desktop-only BG preload (matches ProjectGrid 768px breakpoint; skip rain/snow/null)
   useEffect(() => {
-    const thumbUrls = projects.map((p) => getThumbUrl(p.id));
-    preloadUrls(thumbUrls);
-  }, []);
-  useEffect(() => {
-    if (activeBgTextureUrl) preloadImage(activeBgTextureUrl);
+    if (!activeBgTextureUrl) return;
+    const maybePreload = () => {
+      if (window.innerWidth >= GRID_DESKTOP_MIN) {
+        preloadImage(activeBgTextureUrl);
+      }
+    };
+    maybePreload();
+    window.addEventListener("resize", maybePreload);
+    return () => window.removeEventListener("resize", maybePreload);
   }, [activeBgTextureUrl]);
+
+  // Prefetch 3D chunk only after visitor enters snow (not on default homepage load)
+  useEffect(() => {
+    if (weatherMode !== "snow") return;
+    void import("./components/SnowVoidExplorerR3FOverlay");
+  }, [weatherMode]);
 
   const handleToggleTag = (tag: string) => {
     setSelectedTags((prev) => {
@@ -128,10 +142,14 @@ const App: React.FC = () => {
   return (
     <>
       <WeatherLayer />
-      <SnowVoidExplorerR3FOverlay
-        open={snowEggOpen}
-        onClose={() => setSnowEggOpen(false)}
-      />
+      {snowEggOpen ? (
+        <Suspense fallback={null}>
+          <SnowVoidExplorerR3FOverlay
+            open={snowEggOpen}
+            onClose={() => setSnowEggOpen(false)}
+          />
+        </Suspense>
+      ) : null}
 
       <div className="app-foreground">
         <Router>

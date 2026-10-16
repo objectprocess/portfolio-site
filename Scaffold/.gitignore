@@ -25,3 +25,4 @@ dist-ssr
 # Custom project ignores
 src/assets/book images/
 **/Old versions/
+.media-originals/

@@ -2,8 +2,8 @@ import React from 'react';
 import { useWeather } from '../context/WeatherContext';
 
 const srcByMode: Record<'rain' | 'snow', string> = {
-  rain: '/weather/rain/index.html',
-  snow: '/weather/snow/index.html',
+  rain: '/weather/index.html?mode=rain',
+  snow: '/weather/index.html?mode=snow',
 };
 
 export const WeatherLayer: React.FC = () => {

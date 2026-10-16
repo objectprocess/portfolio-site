@@ -8,7 +8,6 @@ const Header = () => {
   const { mode, toggle, isMobile } = useWeather();
 
   const nameChars = useMemo(() => 'Joseph Gleasure'.split(''), []);
-  const locationChars = useMemo(() => 'Vancouver B.C.'.split(''), []);
 
   return (
     <header className="proto-header">

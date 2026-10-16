@@ -47,7 +47,7 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
   }, []);
 
   const fallbackThumbUrl = useMemo(
-    () => new URL(`../assets/thumbnails/vision-tools.png`, import.meta.url).href,
+    () => getThumbUrl("vision-tools"),
     []
   );
 
@@ -102,19 +102,25 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
     setCellOffsets(nextOffsets);
   };
 
+  // Desktop-only: mobile layout never paints texture cells, so skip the fetch entirely.
   useEffect(() => {
-    if (!backgroundTextureUrl) {
+    if (isMobile || !backgroundTextureUrl) {
       setTextureNatural(null);
       return;
     }
+    let cancelled = false;
     const img = new Image();
-    img.src = backgroundTextureUrl;
     img.onload = () => {
+      if (cancelled) return;
       const w = img.naturalWidth || 0;
       const h = img.naturalHeight || 0;
       if (w > 0 && h > 0) setTextureNatural({ w, h });
     };
-  }, [backgroundTextureUrl]);
+    img.src = backgroundTextureUrl;
+    return () => {
+      cancelled = true;
+    };
+  }, [backgroundTextureUrl, isMobile]);
 
   useLayoutEffect(() => {
     recomputeTextureLayout();
@@ -226,7 +232,7 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
                 alt={stamp.name}
                 className="thumb"
                 loading="lazy"
-                data-format-tried="jpg"
+                data-format-tried="png"
                 onLoad={(e) => {
                   e.currentTarget.classList.add("loaded");
                   const tile = e.currentTarget.parentElement;
@@ -235,37 +241,18 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
                 }}
                 onError={(e) => {
                   const img = e.currentTarget;
-                  const formatTried = img.getAttribute("data-format-tried");
                   const tile = img.parentElement;
                   const cell = tile?.parentElement;
-                  if (formatTried === "jpg") {
-                    img.onerror = null;
-                    img.setAttribute("data-format-tried", "png");
-                    img.src = getThumbUrl(stamp.id, "png");
-                    img.onerror = () => {
-                      img.onerror = null;
-                      img.src = fallbackThumbUrl;
-                      img.style.display = "";
-                      if (cell) {
-                        cell.classList.add("media-error", "media-loaded");
-                      }
-                      img.onload = () => {
-                        img.classList.add("loaded");
-                        if (cell) cell.classList.add("media-loaded");
-                      };
-                    };
-                  } else {
-                    img.onerror = null;
-                    img.src = fallbackThumbUrl;
-                    img.style.display = "";
-                    if (cell) {
-                      cell.classList.add("media-error", "media-loaded");
-                    }
-                    img.onload = () => {
-                      img.classList.add("loaded");
-                      if (cell) cell.classList.add("media-loaded");
-                    };
+                  img.onerror = null;
+                  img.src = fallbackThumbUrl;
+                  img.style.display = "";
+                  if (cell) {
+                    cell.classList.add("media-error", "media-loaded");
                   }
+                  img.onload = () => {
+                    img.classList.add("loaded");
+                    if (cell) cell.classList.add("media-loaded");
+                  };
                 }}
               />
             </div>
@@ -399,7 +386,7 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
                     alt={cellStamp.name}
                     className="thumb"
                     loading="lazy"
-                    data-format-tried="jpg"
+                    data-format-tried="png"
                     onLoad={(e) => {
                       e.currentTarget.classList.add("loaded");
                       // Go up two levels: img -> project-tile -> grid-cell.project
@@ -409,46 +396,19 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
                     }}
                     onError={(e) => {
                       const img = e.currentTarget;
-                      const formatTried = img.getAttribute('data-format-tried');
-                      // Go up two levels: img -> project-tile -> grid-cell.project
                       const tile = img.parentElement;
                       const cell = tile?.parentElement;
-                      
-                      // Try PNG if JPG failed
-                      if (formatTried === 'jpg') {
-                        img.onerror = null; // prevent loops
-                        img.setAttribute('data-format-tried', 'png');
-                        img.src = getThumbUrl(cellStamp.id, 'png');
-                        img.onerror = () => {
-                          // If PNG also fails, use fallback
-                          img.onerror = null;
-                          img.src = fallbackThumbUrl;
-                          img.style.display = "";
-                          if (cell) {
-                            cell.classList.add("media-error");
-                            cell.classList.add("media-loaded"); // Stop shimmer animation
-                          }
-                          // Ensure fallback image also triggers loaded state
-                          img.onload = () => {
-                            img.classList.add("loaded");
-                            if (cell) cell.classList.add("media-loaded");
-                          };
-                        };
-                      } else {
-                        // PNG also failed or already tried, use fallback
-                        img.onerror = null;
-                        img.src = fallbackThumbUrl;
-                        img.style.display = "";
-                        if (cell) {
-                          cell.classList.add("media-error");
-                          cell.classList.add("media-loaded"); // Stop shimmer animation
-                        }
-                        // Ensure fallback image also triggers loaded state
-                        img.onload = () => {
-                          img.classList.add("loaded");
-                          if (cell) cell.classList.add("media-loaded");
-                        };
+                      img.onerror = null;
+                      img.src = fallbackThumbUrl;
+                      img.style.display = "";
+                      if (cell) {
+                        cell.classList.add("media-error");
+                        cell.classList.add("media-loaded");
                       }
+                      img.onload = () => {
+                        img.classList.add("loaded");
+                        if (cell) cell.classList.add("media-loaded");
+                      };
                     }}
                   />
                 </div>

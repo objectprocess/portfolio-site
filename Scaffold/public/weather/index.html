@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather Scene</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    #root {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    .background-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
+    /* Shared overlay canvas (snow: full viewport; rain: top half — set in JS) */
+    #fx-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="root">
+    <img id="bg" class="background-image" alt="" />
+    <canvas id="fx-canvas"></canvas>
+  </div>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const mode = params.get('mode') === 'rain' ? 'rain' : 'snow';
+    document.title = mode === 'rain' ? 'Rain Scene' : 'Snowy Field Scene';
+
+    const bg = document.getElementById('bg');
+    const canvas = document.getElementById('fx-canvas');
+    const ctx = canvas.getContext('2d');
+
+    bg.src = mode === 'rain'
+      ? './assets/rain-bg.webp'
+      : './assets/snow-bg.webp';
+
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    const rand = (a, b) => a + Math.random() * Math.max(0, b - a);
+
+    // ─── SNOW (single canvas, 3 depth layers; counts trimmed ~50% for CPU) ───
+    function startSnow() {
+      canvas.style.height = '100%';
+
+      let width = 0;
+      let height = 0;
+      const getHorizonY = () => height * 0.55;
+      let horizonY = 0;
+
+      // Same layer ratios as before; half the particle budgets
+      const layers = [
+        {
+          snowflakes: [],
+          maxCount: 5000,
+          initialCount: 2500,
+          radiusMin: 0.3, radiusMax: 0.8,
+          speedMin: 0.15, speedMax: 0.3,
+          driftMin: -0.18, driftMax: 0.08,
+          opacityMin: 0.6, opacityMax: 0.9,
+        },
+        {
+          snowflakes: [],
+          maxCount: 2500,
+          initialCount: 650,
+          radiusMin: 1.0, radiusMax: 1.8,
+          speedMin: 0.4, speedMax: 0.6,
+          driftMin: -0.15, driftMax: 0.15,
+          opacityMin: 0.5, opacityMax: 0.7,
+        },
+        {
+          snowflakes: [],
+          maxCount: 200,
+          initialCount: 35,
+          radiusMin: 2.2, radiusMax: 4.0,
+          speedMin: 0.8, speedMax: 1.4,
+          driftMin: -0.35, driftMax: 0.35,
+          opacityMin: 0.7, opacityMax: 0.95,
+        },
+      ];
+
+      const startTime = Date.now();
+      const cycleDuration = 30000;
+
+      function makeFlake(layer, ySpan) {
+        return {
+          x: Math.random() * width,
+          y: Math.random() * ySpan,
+          radius: Math.random() * (layer.radiusMax - layer.radiusMin) + layer.radiusMin,
+          speed: Math.random() * (layer.speedMax - layer.speedMin) + layer.speedMin,
+          drift: Math.random() * (layer.driftMax - layer.driftMin) + layer.driftMin,
+          opacity: Math.random() * (layer.opacityMax - layer.opacityMin) + layer.opacityMin,
+          active: true,
+        };
+      }
+
+      function resize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = Math.floor(width * dpr);
+        canvas.height = Math.floor(height * dpr);
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        horizonY = getHorizonY();
+      }
+
+      resize();
+      layers.forEach((layer) => {
+        for (let i = 0; i < layer.initialCount; i++) {
+          layer.snowflakes.push(makeFlake(layer, horizonY));
+        }
+      });
+
+      function updateDensity() {
+        const progress = ((Date.now() - startTime) % cycleDuration) / cycleDuration;
+        layers.forEach((layer) => {
+          const target = Math.floor(
+            layer.initialCount + (layer.maxCount - layer.initialCount) * progress
+          );
+          while (layer.snowflakes.length < target) {
+            layer.snowflakes.push(makeFlake(layer, horizonY * 0.3));
+          }
+        });
+      }
+
+      function draw() {
+        layers.forEach((layer) => {
+          layer.snowflakes.forEach((flake) => {
+            if (!flake.active || flake.y >= horizonY) return;
+            ctx.beginPath();
+            ctx.arc(flake.x, flake.y, flake.radius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${flake.opacity})`;
+            ctx.fill();
+          });
+        });
+      }
+
+      function update() {
+        layers.forEach((layer) => {
+          layer.snowflakes.forEach((flake) => {
+            if (!flake.active) return;
+            flake.y += flake.speed;
+            flake.x += flake.drift;
+            if (flake.y >= horizonY) {
+              flake.y = -10;
+              flake.x = Math.random() * width;
+            }
+            if (flake.x > width) flake.x = 0;
+            else if (flake.x < 0) flake.x = width;
+          });
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+        updateDensity();
+        draw();
+        update();
+        requestAnimationFrame(animate);
+      }
+
+      window.addEventListener('resize', () => {
+        resize();
+        layers.forEach((layer) => {
+          layer.snowflakes.forEach((flake) => {
+            if (flake.x > width) flake.x = Math.random() * width;
+            if (flake.y > horizonY) flake.y = Math.random() * horizonY;
+          });
+        });
+      });
+
+      animate();
+    }
+
+    // ─── RAIN (single canvas, 3 logical layers — same params as legacy 3-canvas) ───
+    function startRain() {
+      const LAYERS = [
+        { depth: 0.7, densityFactor: 2.0, lengthFactor: 0.6, thickFactor: 0.9 },
+        { depth: 1.0, densityFactor: 1.0, lengthFactor: 1.0, thickFactor: 1.0 },
+        { depth: 1.5, densityFactor: 0.5, lengthFactor: 1.8, thickFactor: 1.2 },
+      ];
+      const COLOR = 'rgba(120,120,120,0.85)';
+      const SPEED = 500;
+      const BASE_DENSITY = 0.001;
+      const BASE_LENGTH = 18;
+      const BASE_THICKNESS = 1;
+
+      const MIN_LIGHT_S = 30;
+      const MAX_LIGHT_S = 55;
+      const RAMP_UP_S = 10;
+      const RAMP_DOWN_S = 12;
+      const REST_MIN_S = 8;
+      const REST_MAX_S = 18;
+      const LIGHT_LEVEL = 0.6;
+      const HEAVY_LEVEL = 3.0;
+
+      const easeInOut = (s, a, b) => {
+        const e = 0.5 * (1 - Math.cos(Math.PI * Math.min(1, Math.max(0, s))));
+        return a + (b - a) * e;
+      };
+
+      let phase = 'rest';
+      let phaseStart = performance.now();
+      let lightDur = rand(MIN_LIGHT_S, MAX_LIGHT_S) * 1000;
+      let restDur = rand(REST_MIN_S, REST_MAX_S) * 1000;
+      let heavyDur = rand(2000, 6000);
+
+      function startCycle() {
+        phase = 'rest';
+        phaseStart = performance.now();
+        lightDur = rand(MIN_LIGHT_S, MAX_LIGHT_S) * 1000;
+        restDur = rand(REST_MIN_S, REST_MAX_S) * 1000;
+      }
+
+      function intensityNow(now) {
+        const t = now - phaseStart;
+        switch (phase) {
+          case 'rest':
+            if (t >= restDur) { phase = 'light'; phaseStart = now; return LIGHT_LEVEL; }
+            return 0;
+          case 'light':
+            if (t >= lightDur) { phase = 'rampUp'; phaseStart = now; return LIGHT_LEVEL; }
+            return LIGHT_LEVEL;
+          case 'rampUp': {
+            const s = Math.min(1, t / (RAMP_UP_S * 1000));
+            const val = easeInOut(s, LIGHT_LEVEL, HEAVY_LEVEL);
+            if (s >= 1) {
+              phase = 'heavy';
+              phaseStart = now;
+              heavyDur = rand(2000, 6000);
+            }
+            return val;
+          }
+          case 'heavy': {
+            if (t >= heavyDur) { phase = 'rampDown'; phaseStart = now; }
+            return HEAVY_LEVEL;
+          }
+          case 'rampDown': {
+            const s = Math.min(1, t / (RAMP_DOWN_S * 1000));
+            const val = easeInOut(s, HEAVY_LEVEL, 0);
+            if (s >= 1) { phase = 'stop'; phaseStart = now; }
+            return val;
+          }
+          case 'stop':
+            if (t >= restDur) startCycle();
+            return 0;
+          default:
+            return 0;
+        }
+      }
+
+      // One drop list per logical layer (same as three canvases, one surface)
+      const layerState = LAYERS.map((layer) => ({ layer, drops: [] }));
+      let cssW = 0;
+      let cssH = 0;
+
+      function resize() {
+        cssW = window.innerWidth;
+        cssH = window.innerHeight * 0.5;
+        canvas.width = Math.floor(cssW * dpr);
+        canvas.height = Math.floor(cssH * dpr);
+        canvas.style.width = cssW + 'px';
+        canvas.style.height = cssH + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function ensureCount(state, count) {
+        const { layer, drops } = state;
+        if (drops.length < count) {
+          const add = count - drops.length;
+          for (let i = 0; i < add; i++) {
+            drops.push({
+              x: Math.random() * cssW,
+              y: -Math.random() * cssH,
+              vy: SPEED * layer.depth,
+              l: BASE_LENGTH * layer.lengthFactor * (0.7 + Math.random() * 0.6),
+            });
+          }
+        } else if (drops.length > count) {
+          drops.length = count;
+        }
+      }
+
+      resize();
+      startCycle();
+      let prev = performance.now();
+
+      function draw(now) {
+        const dt = Math.min(0.05, (now - prev) / 1000);
+        prev = now;
+        ctx.clearRect(0, 0, cssW, cssH);
+
+        const intensity = intensityNow(now);
+
+        // Back → front (same order as stacked canvases)
+        for (const state of layerState) {
+          const { layer, drops } = state;
+          const desired = Math.max(
+            8,
+            Math.floor(cssW * cssH * BASE_DENSITY * layer.densityFactor * intensity)
+          );
+          ensureCount(state, desired);
+
+          ctx.lineWidth = Math.max(
+            1,
+            BASE_THICKNESS * layer.thickFactor * (dpr >= 2 ? 1.25 : 1)
+          );
+          ctx.strokeStyle = COLOR;
+          ctx.lineCap = 'round';
+          ctx.beginPath();
+          for (const d of drops) {
+            d.y += d.vy * dt;
+            if (d.y - d.l > cssH) {
+              d.x = Math.random() * cssW;
+              d.y = -20 - Math.random() * 40;
+            }
+            ctx.moveTo(d.x, d.y);
+            ctx.lineTo(d.x, d.y - d.l);
+          }
+          ctx.stroke();
+        }
+
+        requestAnimationFrame(draw);
+      }
+
+      window.addEventListener('resize', resize);
+      requestAnimationFrame(draw);
+    }
+
+    if (mode === 'rain') startRain();
+    else startSnow();
+  </script>
+</body>
+</html>

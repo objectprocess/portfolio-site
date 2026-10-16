@@ -1,1 +1,0 @@
-Open index.html in your browser. The rain animation will appear over the included background image (image (10).png).

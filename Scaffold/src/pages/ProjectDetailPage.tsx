@@ -210,6 +210,23 @@ const ProjectDetailPage: React.FC = () => {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [isGalleryOpen, navigate]);
 
+  // Gallery navigation with keyboard when gallery is open (fullscreen/overlay)
+  // Must run unconditionally (Rules of Hooks) — guards handle missing project / closed gallery.
+  useEffect(() => {
+    if (!project || !isGalleryOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        setCurrentImageIndex((i) => Math.max(0, i - 1));
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        setCurrentImageIndex((i) => Math.min(imageUrls.length - 1, i + 1));
+      }
+    };
+    window.addEventListener('keydown', onKeyDown, { passive: false } as any);
+    return () => window.removeEventListener('keydown', onKeyDown as any);
+  }, [project, isGalleryOpen, imageUrls.length]);
+
   if (!project) {
     return (
       <div className="container project-detail">
@@ -226,22 +243,6 @@ const ProjectDetailPage: React.FC = () => {
 
   const showGalleryPrev = () => setCurrentImageIndex(i => Math.max(0, i - 1));
   const showGalleryNext = () => setCurrentImageIndex(i => Math.min(imageUrls.length - 1, i + 1));
-
-  // Gallery navigation with keyboard when gallery is open (fullscreen/overlay)
-  useEffect(() => {
-    if (!isGalleryOpen) return;
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        showGalleryPrev();
-      } else if (e.key === 'ArrowRight') {
-        e.preventDefault();
-        showGalleryNext();
-      }
-    };
-    window.addEventListener('keydown', onKeyDown, { passive: false } as any);
-    return () => window.removeEventListener('keydown', onKeyDown as any);
-  }, [isGalleryOpen, imageUrls.length]);
 
   return (
     <div className={`container project-detail${hasImages ? '' : ' no-media'}`}>

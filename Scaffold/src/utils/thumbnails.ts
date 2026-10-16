@@ -1,8 +1,37 @@
 /**
- * Shared thumbnail URL helper. Used by ProjectGrid and by App for preloading.
- * ProjectGrid tries .jpg first and falls back to .png in onError; preload uses
- * the same primary URL (.jpg) so cache is warm when the grid renders.
+ * Build-time thumbnail map. All project thumbs in this repo are PNG files.
+ * Used by ProjectGrid and by App for preloading so the primary URL is correct
+ * on first request (no .jpg probe / undefined asset URLs).
  */
-export function getThumbUrl(id: string, extension: 'jpg' | 'png' = 'jpg'): string {
-  return new URL(`../assets/thumbnails/${id}.${extension}`, import.meta.url).href;
+const thumbModules = import.meta.glob("../assets/thumbnails/*.png", {
+  eager: true,
+  query: "?url",
+  import: "default",
+}) as Record<string, string>;
+
+const thumbById: Record<string, string> = {};
+for (const [path, url] of Object.entries(thumbModules)) {
+  const file = path.split("/").pop() ?? "";
+  const id = file.replace(/\.png$/i, "");
+  if (id) thumbById[id] = url;
+}
+
+const fallbackThumbUrl = new URL(
+  "../assets/thumbnails/vision-tools.png",
+  import.meta.url
+).href;
+
+/**
+ * Resolve the production URL for a project thumbnail.
+ * `extension` is kept for call-site compatibility; thumbs are always PNG.
+ */
+export function getThumbUrl(
+  id: string,
+  _extension: "jpg" | "png" = "png"
+): string {
+  return thumbById[id] ?? fallbackThumbUrl;
+}
+
+export function getFallbackThumbUrl(): string {
+  return fallbackThumbUrl;
 }
