@@ -5,15 +5,13 @@ import Header from "./components/Header";
 import ProjectGrid from "./components/ProjectGrid";
 import Filters from "./components/Filters";
 import AboutPage from "./components/AboutPage";
-import ProjectDetailPage from "./pages/ProjectDetailPage";
 
 import { WeatherLayer } from "./components/WeatherLayer";
 import { useWeather } from "./context/WeatherContext";
 
 import "./App.css";
 
-// IMPORTANT: import from the folder index to avoid colliding with src/data/projects.ts
-import { projects } from "./data/projects/index";
+import { projectsMeta } from "./data/projects/index";
 import { TAGS } from "./data/projects/types";
 import { preloadImage, preloadUrls } from "./utils/preloadAssets";
 import { getThumbUrl } from "./utils/thumbnails";
@@ -23,6 +21,7 @@ const GRID_DESKTOP_MIN = 769;
 const SnowVoidExplorerR3FOverlay = lazy(
   () => import("./components/SnowVoidExplorerR3FOverlay")
 );
+const ProjectDetailPage = lazy(() => import("./pages/ProjectDetailPage"));
 
 // Grid background texture (neutral weather only; rain/snow use empty outline cells)
 import gridBgDefault from "./assets/BG Images/leslieyang_fully_defocused_natural_color_field_glowing_yellow_28df0a8d-da9e-4464-86ac-103780be7ae8_0.webp?url";
@@ -55,7 +54,6 @@ const App: React.FC = () => {
   const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
 
   const activeBgTextureUrl = useMemo(() => {
-    // Rain and snow: no texture — solid cells render as empty outlines
     if (weatherMode === "snow" || weatherMode === "rain") return null;
     return gridBgDefault;
   }, [weatherMode]);
@@ -68,26 +66,20 @@ const App: React.FC = () => {
     }
   }, [weatherMode]);
 
-  // Build stamps directly from projects
   const allStamps: Stamp[] = useMemo(() => {
-    return projects.map((p) => ({ id: p.id, name: p.title }));
+    return projectsMeta.map((p) => ({ id: p.id, name: p.title }));
   }, []);
 
-  // Tag lookup by project id
   const idToTags = useMemo(() => {
     const map = new Map<string, string[]>();
-    projects.forEach((p) => {
+    projectsMeta.forEach((p) => {
       map.set(p.id, Array.isArray(p.tags) ? p.tags : []);
     });
     return map;
   }, []);
 
-  // Your controlled filter buttons
   const availableTags = useMemo(() => [...TAGS], []);
 
-  // Apply tag filtering
-  // Keep stamp positions stable (no re-sorting/compacting) by nulling filtered-out slots.
-  // This way the grid preserves the original layout and leaves "holes" where items were filtered out.
   const filteredStamps: StampSlot[] = useMemo(() => {
     if (selectedTags.size === 0) return allStamps;
 
@@ -100,12 +92,10 @@ const App: React.FC = () => {
     });
   }, [allStamps, idToTags, selectedTags]);
 
-  // Trigger grid animation reset when filters change
   useEffect(() => {
     setKey((prev) => prev + 1);
   }, [selectedTags]);
 
-  // Escape clears tag filter
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") setSelectedTags(new Set());
@@ -114,12 +104,10 @@ const App: React.FC = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Warm grid thumbs immediately (~0.5MB total) so stamps hit cache on first paint.
   useEffect(() => {
-    preloadUrls(projects.map((p) => getThumbUrl(p.id)));
+    preloadUrls(projectsMeta.map((p) => getThumbUrl(p.id)));
   }, []);
 
-  // Desktop-only BG preload (matches ProjectGrid 768px breakpoint; skip rain/snow/null)
   useEffect(() => {
     if (!activeBgTextureUrl) return;
     const maybePreload = () => {
@@ -132,7 +120,6 @@ const App: React.FC = () => {
     return () => window.removeEventListener("resize", maybePreload);
   }, [activeBgTextureUrl]);
 
-  // Prefetch 3D chunk only after visitor enters snow (not on default homepage load)
   useEffect(() => {
     if (weatherMode !== "snow") return;
     void import("./components/SnowVoidExplorerR3FOverlay");
@@ -179,7 +166,20 @@ const App: React.FC = () => {
                       backgroundTextureUrl={activeBgTextureUrl}
                       snowPresentUrls={
                         weatherMode === "snow"
-                          ? [present1, present2, present3, present4, present5, present6, present7, present8, present9, present10, present11, present12]
+                          ? [
+                              present1,
+                              present2,
+                              present3,
+                              present4,
+                              present5,
+                              present6,
+                              present7,
+                              present8,
+                              present9,
+                              present10,
+                              present11,
+                              present12,
+                            ]
                           : undefined
                       }
                       snowSeed={weatherMode === "snow" ? snowSeed : undefined}
@@ -194,7 +194,14 @@ const App: React.FC = () => {
               }
             />
 
-            <Route path="/projects/:id" element={<ProjectDetailPage />} />
+            <Route
+              path="/projects/:id"
+              element={
+                <Suspense fallback={null}>
+                  <ProjectDetailPage />
+                </Suspense>
+              }
+            />
             <Route path="/about" element={<AboutPage />} />
           </Routes>
 

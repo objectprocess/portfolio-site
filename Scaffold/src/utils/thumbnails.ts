@@ -1,9 +1,7 @@
 /**
- * Build-time thumbnail map. All project thumbs in this repo are PNG files.
- * Used by ProjectGrid and by App for preloading so the primary URL is correct
- * on first request (no .jpg probe / undefined asset URLs).
+ * Build-time thumbnail map (WebP). Used by ProjectGrid and App preload.
  */
-const thumbModules = import.meta.glob("../assets/thumbnails/*.png", {
+const thumbModules = import.meta.glob("../assets/thumbnails/*.webp", {
   eager: true,
   query: "?url",
   import: "default",
@@ -12,23 +10,15 @@ const thumbModules = import.meta.glob("../assets/thumbnails/*.png", {
 const thumbById: Record<string, string> = {};
 for (const [path, url] of Object.entries(thumbModules)) {
   const file = path.split("/").pop() ?? "";
-  const id = file.replace(/\.png$/i, "");
+  const id = file.replace(/\.webp$/i, "");
   if (id) thumbById[id] = url;
 }
 
-const fallbackThumbUrl = new URL(
-  "../assets/thumbnails/vision-tools.png",
-  import.meta.url
-).href;
+const fallbackThumbUrl =
+  thumbById["vision-tools"] ??
+  new URL("../assets/thumbnails/vision-tools.webp", import.meta.url).href;
 
-/**
- * Resolve the production URL for a project thumbnail.
- * `extension` is kept for call-site compatibility; thumbs are always PNG.
- */
-export function getThumbUrl(
-  id: string,
-  _extension: "jpg" | "png" = "png"
-): string {
+export function getThumbUrl(id: string, _extension?: "jpg" | "png" | "webp"): string {
   return thumbById[id] ?? fallbackThumbUrl;
 }
 

@@ -1258,3 +1258,23 @@ button:focus-visible {
 
   .project-detail-panelBody { max-height: 260px; }
 }
+
+/* Project cells as native links (keyboard, open-in-new-tab, no underline) */
+a.grid-cell,
+a.project-grid-mobile-cell {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* Respect OS “reduce motion” — keep layout, soften animation */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

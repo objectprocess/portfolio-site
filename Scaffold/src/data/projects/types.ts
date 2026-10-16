@@ -8,22 +8,21 @@ export type ProjectCredit = {
   name: string; // person or org name
 };
 
-export type Project = {
+/** Homepage / nav fields only — safe to ship in the initial bundle. */
+export type ProjectMeta = {
   id: string;
   title: string;
   type: ProjectType;
-
-  //thumbnail: string;
-
-  // controlled buckets for filtering
   tags: Tag[];
+};
 
+export type Project = ProjectMeta & {
   // short summary, always present
   description: string;
 
   credits?: ProjectCredit[];
 
   // content differs by type
-  body?: string;     // ONLY for text projects
-  media?: string[];  // ONLY for media projects
+  body?: string; // ONLY for text projects
+  media?: string[]; // ONLY for media projects
 };

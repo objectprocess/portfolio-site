@@ -1,20 +1,26 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { findProjectById, projects } from '../data/projects';
+import type { Project } from '../data/projects';
+import {
+  findProjectMetaById,
+  loadProjectById,
+  prefetchProject,
+  projectsMeta,
+} from '../data/projects';
 import { preloadUrls } from '../utils/preloadAssets';
+import { getThumbUrl } from '../utils/thumbnails';
 import { renderRichTextHtml } from '../utils/sanitizeRichText';
 
 const ProjectDetailPage: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const fallbackImageUrl = useMemo(
-    () => new URL('../assets/thumbnails/vision-tools.png', import.meta.url).href,
-    []
-  );
+  const fallbackImageUrl = useMemo(() => getThumbUrl('vision-tools'), []);
 
   const projectId = String(id);
-  const project = String(projectId) ? findProjectById(projectId) : undefined;
+  const metaExists = Boolean(projectId && findProjectMetaById(projectId));
+  const [project, setProject] = useState<Project | undefined>(undefined);
+  const [projectLoading, setProjectLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const galleryRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -24,12 +30,33 @@ const ProjectDetailPage: React.FC = () => {
   const [imageAspectRatio, setImageAspectRatio] = useState<number | null>(null);
   const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
 
-  // Keep nav order the same as your `projects` array.
-  const ordered = useMemo(() => [...projects], []);
+  // Keep nav order the same as the lightweight manifest.
+  const ordered = useMemo(() => [...projectsMeta], []);
   const index = useMemo(() => ordered.findIndex((p) => p.id === projectId), [ordered, projectId]);
 
   const prev = index > 0 ? ordered[index - 1] : undefined;
   const next = index >= 0 && index < ordered.length - 1 ? ordered[index + 1] : undefined;
+
+  useEffect(() => {
+    let cancelled = false;
+    setProjectLoading(true);
+    setProject(undefined);
+    if (!metaExists) {
+      setProjectLoading(false);
+      return;
+    }
+    loadProjectById(projectId).then((p) => {
+      if (!cancelled) {
+        setProject(p);
+        setProjectLoading(false);
+      }
+    });
+    if (prev) prefetchProject(prev.id);
+    if (next) prefetchProject(next.id);
+    return () => {
+      cancelled = true;
+    };
+  }, [projectId, metaExists, prev?.id, next?.id]);
 
   const isMobileLayout = viewportSize.width > 0 && viewportSize.width <= 980;
 
@@ -222,7 +249,7 @@ const ProjectDetailPage: React.FC = () => {
     return () => window.removeEventListener('keydown', onKeyDown as any);
   }, [project, isGalleryOpen, imageUrls.length]);
 
-  if (!project) {
+  if (!metaExists) {
     return (
       <div className="container project-detail">
         <div className="project-detail-top">
@@ -231,6 +258,16 @@ const ProjectDetailPage: React.FC = () => {
         <div className="project-detail-center">
           <h1>Project not found</h1>
           <p>That project id doesn’t exist.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (projectLoading || !project) {
+    return (
+      <div className="container project-detail">
+        <div className="project-detail-top">
+          <button className="ui-button" onClick={() => navigate('/')}>Back to Projects</button>
         </div>
       </div>
     );

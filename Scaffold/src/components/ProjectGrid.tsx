@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { getThumbUrl } from "../utils/thumbnails";
 
 const MOBILE_BREAKPOINT = 768;
@@ -34,7 +34,6 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
   snowSeed,
   onSnowPresentClick,
 }) => {
-  const navigate = useNavigate();
   const gridRef = useRef<HTMLDivElement | null>(null);
   const [isMobile, setIsMobile] = useState(
     () => typeof window !== "undefined" && window.innerWidth <= MOBILE_BREAKPOINT
@@ -213,18 +212,10 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
     return (
       <div className="project-grid project-grid-mobile">
         {mobileStamps.map((stamp) => (
-          <div
+          <Link
             key={stamp.id}
+            to={`/projects/${stamp.id}`}
             className="project-grid-mobile-cell"
-            role="button"
-            tabIndex={0}
-            onClick={() => navigate(`/projects/${stamp.id}`)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                navigate(`/projects/${stamp.id}`);
-              }
-            }}
           >
             <div className="project-tile">
               <img
@@ -233,7 +224,7 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
                 className="thumb"
                 loading="eager"
                 decoding="async"
-                data-format-tried="png"
+                data-format-tried="webp"
                 onLoad={(e) => {
                   e.currentTarget.classList.add("loaded");
                   const tile = e.currentTarget.parentElement;
@@ -257,7 +248,7 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
                 }}
               />
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     );
@@ -347,74 +338,87 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
             .filter(Boolean)
             .join(" ");
 
-          // Important: only clickable if it is a real project stamp or a present decoration
-          const isClickable = (baseType === "project" && Boolean(cellStamp)) || isDecorationCell;
+          const isProjectLink = baseType === "project" && Boolean(cellStamp);
+          const cellStyle = {
+            ...(textureStyle || {}),
+            animationDelay: `${spiralDelays[r][c]}ms`,
+          } as React.CSSProperties;
+
+          const thumb = cellStamp ? (
+            <div className="project-tile">
+              <img
+                src={getThumbUrl(cellStamp.id)}
+                alt={cellStamp.name}
+                className="thumb"
+                loading="eager"
+                decoding="async"
+                data-format-tried="webp"
+                onLoad={(e) => {
+                  e.currentTarget.classList.add("loaded");
+                  const tile = e.currentTarget.parentElement;
+                  const cell = tile?.parentElement;
+                  if (cell) cell.classList.add("media-loaded");
+                }}
+                onError={(e) => {
+                  const img = e.currentTarget;
+                  const tile = img.parentElement;
+                  const cell = tile?.parentElement;
+                  img.onerror = null;
+                  img.src = fallbackThumbUrl;
+                  img.style.display = "";
+                  if (cell) {
+                    cell.classList.add("media-error");
+                    cell.classList.add("media-loaded");
+                  }
+                  img.onload = () => {
+                    img.classList.add("loaded");
+                    if (cell) cell.classList.add("media-loaded");
+                  };
+                }}
+              />
+            </div>
+          ) : null;
+
+          const decor = presentSrc ? (
+            <img src={presentSrc} alt="Present decoration" className="grid-decoration" draggable={false} />
+          ) : null;
+
+          if (isProjectLink && cellStamp) {
+            return (
+              <Link
+                key={key}
+                to={`/projects/${cellStamp.id}`}
+                data-cell-key={key}
+                className={classNames}
+                style={cellStyle}
+              >
+                {decor}
+                {thumb}
+              </Link>
+            );
+          }
 
           return (
             <div
               key={key}
               data-cell-key={key}
               className={classNames}
-              style={
-                {
-                  ...(textureStyle || {}),
-                  animationDelay: `${spiralDelays[r][c]}ms`,
-                } as React.CSSProperties
-              }
-              role={isClickable ? "button" : undefined}
-              tabIndex={isClickable ? 0 : -1}
+              style={cellStyle}
+              role={isDecorationCell ? "button" : undefined}
+              tabIndex={isDecorationCell ? 0 : -1}
               onClick={() => {
-                if (baseType === "project" && cellStamp) navigate(`/projects/${cellStamp.id}`);
-                else if (isDecorationCell) onSnowPresentClick?.();
+                if (isDecorationCell) onSnowPresentClick?.();
               }}
               onKeyDown={(e) => {
-                if (!isClickable) return;
+                if (!isDecorationCell) return;
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
-                  if (baseType === "project" && cellStamp) navigate(`/projects/${cellStamp.id}`);
-                  else if (isDecorationCell) onSnowPresentClick?.();
+                  onSnowPresentClick?.();
                 }
               }}
             >
-              {presentSrc ? (
-                <img src={presentSrc} alt="Present decoration" className="grid-decoration" draggable={false} />
-              ) : null}
-
-              {baseType === "project" && cellStamp ? (
-                <div className="project-tile">
-                  <img
-                    src={getThumbUrl(cellStamp.id)}
-                    alt={cellStamp.name}
-                    className="thumb"
-                    loading="eager"
-                    decoding="async"
-                    data-format-tried="png"
-                    onLoad={(e) => {
-                      e.currentTarget.classList.add("loaded");
-                      // Go up two levels: img -> project-tile -> grid-cell.project
-                      const tile = e.currentTarget.parentElement;
-                      const cell = tile?.parentElement;
-                      if (cell) cell.classList.add("media-loaded");
-                    }}
-                    onError={(e) => {
-                      const img = e.currentTarget;
-                      const tile = img.parentElement;
-                      const cell = tile?.parentElement;
-                      img.onerror = null;
-                      img.src = fallbackThumbUrl;
-                      img.style.display = "";
-                      if (cell) {
-                        cell.classList.add("media-error");
-                        cell.classList.add("media-loaded");
-                      }
-                      img.onload = () => {
-                        img.classList.add("loaded");
-                        if (cell) cell.classList.add("media-loaded");
-                      };
-                    }}
-                  />
-                </div>
-              ) : null}
+              {decor}
+              {thumb}
             </div>
           );
         })

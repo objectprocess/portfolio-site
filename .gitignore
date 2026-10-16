@@ -1,7 +1,6 @@
-Scaffold/src/assets/projects/ 
-Scaffold/src/assets/projects/
-Scaffold/src/assets/projects/
-Scaffold/src/assets/projects/
-Scaffold/src/assets/projects/
-Scaffold/src/assets/projects/
+# Accidental / local-only clutter (not part of the Netlify site)
+IG Post/
+watermarks-remover/
+
+# Legacy ignored asset folders
 Scaffold/src/assets/projects/
