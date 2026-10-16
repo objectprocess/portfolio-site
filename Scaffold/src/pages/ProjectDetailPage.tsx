@@ -7,7 +7,8 @@ import {
   prefetchProject,
   projectsMeta,
 } from '../data/projects';
-import { preloadUrls } from '../utils/preloadAssets';
+import { optimizeImageUrl } from '../utils/netlifyImage';
+import { isVideoUrl, preloadUrls } from '../utils/preloadAssets';
 import { getThumbUrl } from '../utils/thumbnails';
 import { renderRichTextHtml } from '../utils/sanitizeRichText';
 
@@ -60,7 +61,7 @@ const ProjectDetailPage: React.FC = () => {
 
   const isMobileLayout = viewportSize.width > 0 && viewportSize.width <= 980;
 
-  const imageUrls = useMemo(() => {
+  const rawImageUrls = useMemo(() => {
     if (!project) return [];
 
     // Preferred: explicit media list for media projects
@@ -73,12 +74,15 @@ const ProjectDetailPage: React.FC = () => {
     // Text projects: gallery only when media is declared on the project
     return Array.isArray(project.media) ? project.media : [];
   }, [fallbackImageUrl, project]);
-  const hasImages = imageUrls.length > 0;
 
-  // Helper to check if a URL is a video file
-  const isVideo = (url: string): boolean => {
-    return /\.(mp4|webm|ogg|mov)(\?|$)/i.test(url);
-  };
+  // Display URLs: images via Netlify Image CDN; videos unchanged
+  const imageUrls = useMemo(() => {
+    const width = isMobileLayout ? 960 : 1400;
+    return rawImageUrls.map((url) =>
+      isVideoUrl(url) ? url : optimizeImageUrl(url, { width, quality: 80 })
+    );
+  }, [rawImageUrls, isMobileLayout]);
+  const hasImages = imageUrls.length > 0;
 
   // Preload gallery: current + previous + next so next/prev feel instant
   useEffect(() => {
@@ -381,7 +385,7 @@ const ProjectDetailPage: React.FC = () => {
                 onClick={toggleGalleryFullscreen}
                 style={fullscreenFrameStyle}
               >
-                {isVideo(imageUrls[currentImageIndex]) ? (
+                {isVideoUrl(rawImageUrls[currentImageIndex] ?? '') ? (
                   <video
                     key={imageUrls[currentImageIndex]}
                     ref={videoRef}
@@ -398,7 +402,7 @@ const ProjectDetailPage: React.FC = () => {
                       const aspectRatio = video.videoWidth / video.videoHeight;
                       setImageAspectRatio(aspectRatio);
                     }}
-                    onError={(e) => {
+                    onError={() => {
                       console.error('Video failed to load:', imageUrls[currentImageIndex]);
                     }}
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
@@ -410,12 +414,13 @@ const ProjectDetailPage: React.FC = () => {
                     alt={`${project.title} image ${currentImageIndex + 1}`}
                     className="project-detail-galleryImage"
                     loading="eager"
+                    decoding="async"
                     onLoad={(e) => {
                       const img = e.currentTarget;
                       const aspectRatio = img.naturalWidth / img.naturalHeight;
                       setImageAspectRatio(aspectRatio);
                     }}
-                    onError={(e) => {
+                    onError={() => {
                       console.error('Image failed to load:', imageUrls[currentImageIndex]);
                     }}
                   />

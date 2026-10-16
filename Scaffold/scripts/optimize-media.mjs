@@ -1,13 +1,20 @@
 /**
- * One-shot local media optimization.
- * Backs up originals under .media-originals/, then writes smaller siblings / replacements.
+ * One-shot local media optimization (optional; not used in Netlify builds).
+ * Requires: npm i -D sharp
  * Run: node scripts/optimize-media.mjs
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
-import sharp from 'sharp';
+
+let sharp;
+try {
+  sharp = (await import('sharp')).default;
+} catch {
+  console.error('Missing sharp. Install with: npm i -D sharp');
+  process.exit(1);
+}
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');

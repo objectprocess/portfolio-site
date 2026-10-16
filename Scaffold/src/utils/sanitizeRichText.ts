@@ -2,6 +2,8 @@
 // Allows only a small set of tags used for formatting copy (e.g. <p>).
 // This is NOT a general-purpose sanitizer, but it prevents obvious script injection.
 
+import { optimizeImageUrl } from './netlifyImage';
+
 const allowedTags = new Set([
   'P',
   'BR',
@@ -126,8 +128,9 @@ function markdownToHtml(md: string): string {
 
   // Extract images (![alt](url)) and render as <figure><img/><figcaption/></figure>
   const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
-  processedSrc = processedSrc.replace(imageRegex, (match, alt, url) => {
-    const safeUrl = escapeHtml(String(url).trim());
+  processedSrc = processedSrc.replace(imageRegex, (_match, alt, url) => {
+    const optimized = optimizeImageUrl(String(url).trim(), { width: 1200, quality: 80 });
+    const safeUrl = escapeHtml(optimized);
     const caption = escapeHtml(String(alt).trim());
     return `\n\n<figure class="project-body-figure"><img src="${safeUrl}" alt="${caption}" loading="lazy"/><figcaption>${caption}</figcaption></figure>\n\n`;
   });
