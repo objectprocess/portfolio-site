@@ -15,7 +15,8 @@ import "./App.css";
 // IMPORTANT: import from the folder index to avoid colliding with src/data/projects.ts
 import { projects } from "./data/projects/index";
 import { TAGS } from "./data/projects/types";
-import { preloadImage } from "./utils/preloadAssets";
+import { preloadImage, preloadUrls } from "./utils/preloadAssets";
+import { getThumbUrl } from "./utils/thumbnails";
 
 const GRID_DESKTOP_MIN = 769;
 
@@ -111,6 +112,11 @@ const App: React.FC = () => {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  // Warm grid thumbs immediately (~0.5MB total) so stamps hit cache on first paint.
+  useEffect(() => {
+    preloadUrls(projects.map((p) => getThumbUrl(p.id)));
   }, []);
 
   // Desktop-only BG preload (matches ProjectGrid 768px breakpoint; skip rain/snow/null)

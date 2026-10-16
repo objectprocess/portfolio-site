@@ -231,7 +231,8 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
                 src={getThumbUrl(stamp.id)}
                 alt={stamp.name}
                 className="thumb"
-                loading="lazy"
+                loading="eager"
+                decoding="async"
                 data-format-tried="png"
                 onLoad={(e) => {
                   e.currentTarget.classList.add("loaded");
@@ -385,7 +386,8 @@ const ProjectGrid: React.FC<ProjectGridProps> = ({
                     src={getThumbUrl(cellStamp.id)}
                     alt={cellStamp.name}
                     className="thumb"
-                    loading="lazy"
+                    loading="eager"
+                    decoding="async"
                     data-format-tried="png"
                     onLoad={(e) => {
                       e.currentTarget.classList.add("loaded");

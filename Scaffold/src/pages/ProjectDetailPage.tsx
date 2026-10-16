@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { findProjectById, projects } from '../data/projects';
 import { preloadUrls } from '../utils/preloadAssets';
-import { getImageUrlsForTitle } from '../utils/projectImages';
 import { renderRichTextHtml } from '../utils/sanitizeRichText';
 
 const ProjectDetailPage: React.FC = () => {
@@ -40,16 +39,12 @@ const ProjectDetailPage: React.FC = () => {
     // Preferred: explicit media list for media projects
     if (project.type === 'media') {
       if (Array.isArray(project.media) && project.media.length > 0) return project.media;
-
-      const folderUrls = getImageUrlsForTitle(project.title);
-      if (folderUrls.length > 0) return folderUrls;
-
       // Media project but no media yet: show placeholder
       return [fallbackImageUrl];
     }
 
-    // Text projects: optional folder images, otherwise no gallery
-    return getImageUrlsForTitle(project.title);
+    // Text projects: gallery only when media is declared on the project
+    return Array.isArray(project.media) ? project.media : [];
   }, [fallbackImageUrl, project]);
   const hasImages = imageUrls.length > 0;
 
